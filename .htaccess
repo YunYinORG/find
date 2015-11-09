@@ -1,0 +1,16 @@
+<Files app.py>
+    SetHandler wsgi-script
+    Options ExecCGI FollowSymLinks
+</Files>
+<Files code.py>
+    SetHandler wsgi-script
+    Options ExecCGI FollowSymLinks
+</Files>
+<IfModule mod_rewrite.c>      
+  RewriteEngine on
+  RewriteBase /
+  RewriteCond %{REQUEST_URI} !^/favicon.ico$
+  RewriteCond %{REQUEST_URI} !^(/.*)+app.py/
+  RewriteCond %{REQUEST_URI} !^(/.*)+code.py/
+  RewriteRule ^(.*)$ app.py/$1 [PT]
+</IfModule>

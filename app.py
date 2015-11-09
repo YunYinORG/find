@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 #coding=utf-8
 import web
-import urllib2
-import urllib
 urls = (
     '/', 'index',
     '/verify', 'verify',
@@ -11,8 +9,16 @@ urls = (
     '/log', 'log',
     '/code', 'code',
     '/phone', 'phone',
+    '/test','test',
+    '/hello','hello',
 )
-app = web.application(urls, globals())
+
+
+class test:
+	def GET(self):
+		return 'It works ! [test]';
 
 if __name__ == "__main__":
-    app.run()
+	application = web.application(urls, globals()).run()
+else :
+	application = web.application(urls, globals()).wsgifunc()
