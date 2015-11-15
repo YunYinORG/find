@@ -1,0 +1,10 @@
+handlers:
+- url: /static/
+  static_path: static
+  gzip: on
+
+- url: /robots.txt
+  static_path: static/robots.txt
+  
+- url: /favicon.ico
+  static_path: favicon.ico
