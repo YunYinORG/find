@@ -2,10 +2,28 @@
 <html lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
-  	<title>云印南天——招领服务</title>
+  	<title>云印南天—招领服务</title>
   	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
-  	<link rel="stylesheet" type="text/css" href="/static/css/card.css">
+  	<!-- <link rel="stylesheet" type="text/css" href="/static/css/card.css"> -->
 <style type="text/css">
+html {
+	margin:0;
+	padding: 0;
+	text-align:center;
+	height:100%;
+	width:100%;
+	overflow-x: hidden;
+}
+body {
+	margin: 0;
+	padding: 0;
+	background-color:#57c3ea;
+	color:#FFF;
+	position:relative;
+	width:100%;
+	min-height:98%
+}
+
 /*#obj{color:blue;overflow:hidden;width:450px;position:absolute;top:32%;left:12%;height:200px;}*/
 .input,.btn{
 	color: #FFF;
@@ -24,8 +42,9 @@ label{
     line-height: 1.8em;
 }
 .form{
-	margin-top: 2em;
-	width: 100%;
+	margin: 2em auto 1em auto;
+	width: 90%;
+	border:1px solid #ccc;
 }
 .input{
     border: 0px;
@@ -52,11 +71,92 @@ label{
     cursor: pointer;
     padding: 2px;
 }
+.info{
+	margin: auto;
+	text-align: center;
+	display: flex;
+	-webkit-flex-flow: row wrap;
+}
+.info .intro{
+	margin: auto;
+	width: 45%;
+	height: 95%;
+	border: 1px solid;
+	text-align: left;
+	display: inline-block;
+}
+h3{
+	text-align: center;
+}
+li{
+	list-style: none;
+	font-size: 1.2em;
+}
+.how{
+text-align: center;
+height: 150px;
+max-height: 150px;
+width: 100%;
+margin: 0;
+	/*display: flex;*/
+}
+.step{
+width: 150px;
+height: 100%;
+text-align: center;
+display: inline-block;
+background: #FEFEFE;
+color:#57c3ea;
+border-radius:50%;
+font-size: 1.1em;
+ vertical-align: middle;
+}
+.to{
+    width: 0;
+    height:0;
+    border-top:40px solid transparent;
+    border-bottom:40px solid transparent;
+    border-left: 60px solid #FFF;
+    font-size: 0px;
+    display: inline-block;
+   line-height: 0px;
+    vertical-align: middle;
+        }
+footer li{
+	padding:10px;
+	color: #DDD;
+	display: inline;
+}
+footer li a{
+	color: #DDD;
+	text-decoration: none;
+}
 </style>
 </head>
 <body>
 <h1>校园卡招领</h1>
 <h2>南开大学天津大学校园卡招领</h2>
+<div class="how">
+	<div class="step first">
+		<h3>登录</h3>
+		<p>使用云印校园账号或者手机号</p>
+	</div>
+	<div class="to"></div>
+	<div class="step second">
+		<h3>验证</h3>
+		<p>验证失主信息(学号+姓名)</p>
+	</div>
+	<div class="to"></div>
+	<div class="step third">
+		<h3>系统通知</h3>
+		<p>系统发送通知告知失主</p>
+	</div>
+	<div class="to"></div>
+	<div class="step last">
+		<h3>失主确认</h3>
+		<p>等待失主联系您和确认</p>
+	</div>	
+</div>
 	<div>
 		<form class="form">
 		<div>
@@ -68,7 +168,30 @@ label{
 			<button type="submit" class="btn">验证并通知</button>
 		</form>
 	</div>
+	<div class="info">
+		<div class="intro">
+			<h3>服务简介</h3>
+			<ul>
+			<li>平台目的：<strong>第一时间</strong>通知到失主</li>
+			<li>通知方式：系统短信，系统邮件</li>
+			<li>辅助方式：微博广播,校内私信（目前仅支持南开）</li>
+			<li>支持内容：校园卡，学生证等学号姓名关联内容</li>
+			<p>PS：当如果失主绑定了云印服务账号会立即通知失主，否则采用辅助方式。<br/>
+			为保护隐私保护，所有通知由系统直接发送，<strong>不可查看</strong>失主信息</p>
+			</ul>
+		</div>
+		<div class="intro">
+			<h3>防滥用和骚扰</h3>
+			<ul>
+			<li>信息统计：系统会统计每条招领信息并以此进行保护限制</li>
+			<li>使用限制：云印用户限制3次，临时用户限制1次</li>
+			<li>骚扰防止：失主最多收到三次通知</li>
+			<li>失主举报：一旦举报，使用者将永久封禁此功能</li>
+			<li>失主确认：失主确认后，找回者将收到感谢，并解除限制</li>
+			<p>PS：限制次数指可以联系的失主</p>
+			</ul>
+		</div>
+	</div>
+<footer ><ul ><li><a target="_blank" href="http://www.yunyin.org/">©云印南天</a></li><li><a target="_blank" rel="nofollow" href="https://github.com/YunYinORG/">开源项目</a></li><li><a>by:梁崇军|NewFuture|Crisone</a></li> <li><a href="">合作:NKBBS</a></li></footer>
 </body>
 </html>
-<script type="text/javascript" src="/static/jquery/2.1.1/jquery.min.js"></script>
-<script type="text/javascript" src="/static/bootstrap/3.3.2/js/bootstrap.min.js"></script>

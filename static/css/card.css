@@ -1,13 +1,17 @@
 html {
 	margin:0;
+	padding: 0;
 	text-align:center;
 	height:100%;
-	width:100%
+	width:100%;
+	overflow-x: hidden;
 }
 body {
+	margin: 0;
+	padding: 0;
 	background-color:#57c3ea;
 	color:#FFF;
 	position:relative;
-	width:95%;
+	width:100%;
 	min-height:98%
 }
