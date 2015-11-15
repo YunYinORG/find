@@ -11,6 +11,6 @@
   RewriteBase /
   RewriteCond %{REQUEST_URI} !^/favicon.ico$
   RewriteCond %{REQUEST_URI} !^(/.*)+app.py/
-  RewriteCond %{REQUEST_URI} !^(/.*)+code.py/
+  RewriteCond %{REQUEST_URI} !^/static/
   RewriteRule ^(.*)$ app.py/$1 [PT]
 </IfModule>

@@ -1,68 +1,74 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  	<title>云印招卡中心</title>
-  	<link rel="stylesheet" type="text/css" href="/static/bootstrap/3.3.2/css/bootstrap.min.css">
+	<meta charset="UTF-8">
+  	<title>云印南天——招领服务</title>
+  	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+  	<link rel="stylesheet" type="text/css" href="/static/css/card.css">
 <style type="text/css">
-#obj{color:blue;overflow:hidden;width:450px;position:absolute;top:32%;left:12%;height:200px;}
+/*#obj{color:blue;overflow:hidden;width:450px;position:absolute;top:32%;left:12%;height:200px;}*/
+.input,.btn{
+	color: #FFF;
+	background-color: transparent;
+	text-align: center;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    font-family: Lato,Helvetica,Arial,sans-serif;
+    font-size: 1.5em;
+    line-height: 1.8em;
+}
+label{
+	width: 8%;
+	color: #FEFEFE;
+	 font-size: 1em;
+    line-height: 1.8em;
+}
+.form{
+	margin-top: 2em;
+	width: 100%;
+}
+.input{
+    border: 0px;
+    width: 77%;
+    border-bottom: 2px solid;
+}
+.input::-moz-placeholder { color: #eee; }
+.input::-webkit-input-placeholder { color:#eee; }
+.input:-ms-input-placeholder { color:#eee; }
+.input:focus,.btn:hover,.btn:active{
+	color:#57c3ea;
+	font-weight:bolder;
+	background:#fefefe;
+	border:2px solid #FFF;
+}
 
+.input:hover,.input:active{
+	font-weight:bolder;
+	 border-bottom: 3px solid;
+}
+.btn{
+    border: 2px solid;
+    width: 80%;
+    cursor: pointer;
+    padding: 2px;
+}
 </style>
 </head>
 <body>
-	<div style="border:1px solid blue;height:200px;margin-bottom:20px">	
-		<form class="form-inline" method="post" action="/notify">
-		  	<div class="form-group">
-		    	<input type="text" class="form-control" name="number" placeholder="失主学号">
-		  	</div>
-		  	<div class="form-group">
-		    	<input type="text" class="form-control" name="name" placeholder="失主姓名">
-		  	</div>
-		  	<button type="submit" class="btn btn-primary">通知失主</button>
-		</form>		
-	</div>
-	<div class="container">
-		<div class="row">
-			<div class="col-md-6">
-				如果你拾到了同学的校园卡（学号相关证件）,在此输入TA的卡号（学号）和TA的姓名;
-				系统会把你的联系方式（绑定的手机号和绑定的邮箱）和丢失信息通知到TA的手机和邮箱（如果有的话）,TA将可以联系到你;
-				为了防止恶意使用,每个人的使用次数有限制;如果收到骚扰举报将永久封禁此功能
-			</div>
-			<div class="col-md-6" style="position:relative">
-			</div>
+<h1>校园卡招领</h1>
+<h2>南开大学天津大学校园卡招领</h2>
+	<div>
+		<form class="form">
+		<div>
+			<label>卡号</label><input type="text" class="input" placeholder="失主学号"/>
 		</div>
-		<div class="row col-md-12">
+		<div>
+			<label>姓名</label><input type="text" class="input" placeholder="失主姓名" />
 		</div>	
+			<button type="submit" class="btn">验证并通知</button>
+		</form>
 	</div>
 </body>
 </html>
 <script type="text/javascript" src="/static/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="/static/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-<script type="text/javascript">
-(function(c){
-	var o = document.getElementById('obj');
-	var ch = o.clientHeight;
-	var sh = o.scrollHeight;
-	o.s = 0;
-	if(sh <= ch){
-		return false;
-	}
-	var delay = 50;
-	o.onmouseover = function(){this.Stop = true;}
-	o.onmouseout = function(){this.Stop = false;}
-	giveInterval(autoRun,delay,o);
-	o.innerHTML = o.innerHTML + o.innerHTML;
-	function giveInterval(funcName,time){var args=[];for(var i = 2;i < arguments.length;i ++){args.push(arguments[i]);}return window.setInterval(function(){funcName.apply(this,args);},time);}
-	function autoRun(o,s){
-		if(o.Stop){return false;}
-		var st = o.scrollTop;
-		var sh = o.scrollHeight;
-		o.s ++;
-		o.scrollTop = o.s;
-		if(st >= sh/2){
-			o.scrollTop = 0;
-			o.s = 0;
-		}
-	}
-})('seamless')
-</script>
