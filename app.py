@@ -9,6 +9,8 @@ import web
 from controller.index import index
 from controller.notify import notify,broadcast
 
+from lib.yunyin import yunyin
+
 web.config.debug = True
 web.DEBUG=True
 #url路由
@@ -23,14 +25,16 @@ urls = (
     '/test','test',#可用性测试
 )
 
-#测试
 class test:
-	def GET(self):
-		return 'It works ! [test]';
+    def GET(self):
+        # cookie=web.cookies().get('token')
+        y=yunyin()
+        user=y.getUser()
+        return user
 
 #启动服务
 app = web.application(urls, globals())
 if __name__ == "__main__":
-	application = app.run()
-else :
+    application = app.run()
+else:
     application = app.wsgifunc()

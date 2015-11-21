@@ -4,13 +4,15 @@ import web
 import settings
 import urllib
 import urllib2
+
 class yunyin:
-	def __init__(self):
-		self.base_url = BASE_URL
+	def __init__(self,apikey='',url='http://api.yunyin.org/'):
+		self.base_url = url
+		self.apikey=apikey
 
 	def logged(self):
 		url = self.base_url + 'user'
-		result = get(url)
+		result = self.get(url)
 		if result:
 			return result
 		else:
@@ -27,7 +29,7 @@ class yunyin:
 
 	def lost_phone(self,uid):
 		url = self.base_url + 'user/' + str(uid) + 'phone'
-		result = get(url)
+		result = self.get(url)
 		if result:
 			return result
 		else:
@@ -36,28 +38,31 @@ class yunyin:
 	def bind_phone(self):
 		pass
 
+	def getUser(self):
+		url=self.base_url+'user'
+		return self.get(url)
 
-def post(url,data):
-	token = web.cookie().get('token')
-	if not token:
-		return 0
-	else:
-		header = {'TOKEN':token}
-		post_data = urllib.urlencode(data)
-		req = urllib2.request(url,post_data,header)
-		response = urllib2.urlopen(req)
-		result = response.read()
-		return result
+	@staticmethod
+	def post(url,data):
+		token = web.cookies().get('token')
+		if not token:
+			return 0
+		else:
+			header = {'TOKEN':token}
+			post_data = urllib.urlencode(data)
+			req = urllib2.request(url,post_data,header)
+			response = urllib2.urlopen(req)
+			result = response.read()
+			return result
 
-def get(url):
-	token = web.cookie().get('token')
-	if not token:
-		return 0
-	else:
-		opener = urllib2.build_opener()
-		opener.addheaders.append(('Cookie','token = ' + token))
-		response = opener.open(url)
-		result = response.read()
-		return result
-
-		
+	@staticmethod
+	def get(url):
+		token = web.cookies().get('token')
+		if not token:
+			return 0
+		else:
+			h={'Cookie':'token=%s'%(token)}
+			req = urllib2.Request(url,headers=h)
+			response = urllib2.urlopen(req)
+			result = response.read()
+			return result

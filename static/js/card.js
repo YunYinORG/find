@@ -32,11 +32,11 @@ function displayErr(msg)
 }
 $('#card').blur(function()
 	{
-		if(getcard())displayErr('');
+		if($(this).val()&&getcard())displayErr('');
 	});
 $('#name').blur(function()
 	{
-		if(getName())displayErr('');
+		if($(this).val()&&getName())displayErr('');
 	});
 $('#submit').click(function(){
 	var number,name;
@@ -49,11 +49,13 @@ $('#submit').click(function(){
 		{
 			if(result.status==0)
 			{
-				//未登录
-
+				$('#login-modal').show();
+				$('#submit').text('通知失主').removeAttr('disabled');
 			}else if(result.status==1)
 			{
-				
+				$('#submit').text('已通知');
+				$('input').attr('disabled','disabled');
+				$('#err').html("已经通知"+name+"["+number+"]");
 			}
 		})
 	}

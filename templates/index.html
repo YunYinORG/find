@@ -4,201 +4,8 @@
 	<meta charset="UTF-8">
   	<title>云印南天—招领服务</title>
   	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
-  	<!-- <link rel="stylesheet" type="text/css" href="/static/css/card.css"> -->
+  	<link rel="stylesheet" type="text/css" href="/static/css/card.css">
 <style type="text/css">
-html {
-	margin:0;
-	padding: 0;
-	text-align:center;
-	height:100%;
-	width:100%;
-	overflow-x: hidden;
-}
-body {
-	margin: 0;
-	padding: 0;
-	background-color:#57c3ea;
-	color:#FFF;
-	position:relative;
-	width:100%;
-	min-height:98%;
-	text-align: center;
-}
-
-/*#obj{color:blue;overflow:hidden;width:450px;position:absolute;top:32%;left:12%;height:200px;}*/
-.input,.btn,.err{
-	color: #FFF;
-	background-color: transparent;
-	text-align: center;
-    margin-top: 2%;
-    margin-bottom: 2%;
-    font-family: Lato,Helvetica,Arial,sans-serif;
-    font-size: 1.5em;
-    line-height: 1.8em;
-}
-label{
-	width: 8%;
-	color: #FEFEFE;
-	 font-size: 1.1em;
-    line-height: 1.8em;
-}
-.form{
-	margin: 2em auto 1em auto;
-	width: 90%;
-	border:4px dashed #eee;
-}
-.input{
-    border: 0px;
-    width: 77%;
-    border-bottom: 2px solid #FFF; 
-}
-.input::-moz-placeholder { color: #eee; }
-.input::-webkit-input-placeholder { color:#eee; }
-.input:-ms-input-placeholder { color:#eee; }
-.input:focus,.btn:hover,.btn:active{
-	color:#57c3ea;
-	font-weight:bolder;
-	background:#fefefe;
-	border:2px solid #FFF;
-}
-
-.input:hover,.input:active{
-	font-weight:bolder;
-	 border-bottom: 3px solid;
-}
-.btn{
-    border: 2px solid;
-    width: 80%;
-    cursor: pointer;
-    padding: 2px;
-}
-.info{
-	margin: auto;
-	text-align: center;
-	display: flex;
-	-webkit-flex-flow: row wrap;
-}
-.info .intro{
-	margin: auto;
-	width: 42%;
-	height: 95%;
-	border: 1px double;
-	text-align: left;
-	display: inline-block;
-}
-.intro:first-of-type{
-	margin-left: 5%;
-}
-.intro:last-of-type{
-	margin-right:5%;
-}
-h3{
-	text-align: center;
-}
-li{
-	list-style: none;
-	font-size: 1.2em;
-}
-.how{
-width: 90%;
-text-align: center;
-height: 150px;
-max-height: 150px;
-margin: auto;
-border: dotted #ddd;
-	/*display: flex;*/
-}
-.step{
-width: 150px;
-height: 100%;
-text-align: center;
-display: inline-block;
-background: #FEFEFE;
-color:#57c3ea;
-border-radius:50%;
-font-size: 1.1em;
- vertical-align: middle;
-}
-.to{
-    width: 0;
-    height:0;
-    border-top:40px solid transparent;
-    border-bottom:40px solid transparent;
-    border-left: 60px solid #FFF;
-    font-size: 0px;
-    display: inline-block;
-   line-height: 0px;
-    vertical-align: middle;
-        }
-footer li{
-	padding:10px;
-	color: #DDD;
-	display: inline;
-}
-footer li a{
-	color: #DDD;
-	text-decoration: none;
-}
-.card{
-	margin-top:1.2em;
-}
-.err{
-	background-color: #CF00F3;
-	padding: 0;
-	margin: auto;
-	width: 90%;
-	position: absolute;
-	font-size: 1.1em;
-	/*border: 1px dotted #CF00F3;*/
-	/*margin: auto;*/
-}
-@media(max-width: 930px){
-
-	.how{
-		margin: auto;
-		border: dotted #ddd;
-		height: 120px;
-	}
-	.step{
-		max-width: 180px;
-		width: 120px;
-		height: 120px;
-		font-size: 1em;
-	}
-	.to{
-    border-top:20px solid transparent;
-    border-bottom:20px solid transparent;
-    border-left: 24px solid #FFF;
-    }
-	.info .intro{
-		width:90%; 
-	}
-}
-@media(max-width: 670px){
-	.how{
-		margin: auto;
-		border: dotted #ddd;
-		display: inherit;
-		height: auto;
-		max-height: 1000px;
-	}
-	.step{
-		width: 90%;
-		border:0 none;
-		border-radius:0;
-		display: inherit;
-		margin: 1px auto 1px auto;
-		height: auto;
-		padding:1px;
-		max-width: 90%;
-	}
-	.to,label{
-		display:none;
-    }
-	.info .intro{
-		width:90%; 
-	}
-}
 </style>
 </head>
 <body>
@@ -211,7 +18,7 @@ footer li a{
 	</div>
 	<div class="to"></div>
 	<div class="step second">
-		<h3>2.验证</h3>
+		<h3><a href="#verify">2.验证</a></h3>
 		<p>验证失主信息(学号+姓名)</p>
 	</div>
 	<div class="to"></div>
@@ -225,8 +32,9 @@ footer li a{
 		<p>等待失主联系您和确认</p>
 	</div>	
 </div>
-		<div class="form">
+		<div id="verify" class="form">
 		<div id="err" class="err"></div>
+		<h3>填写失主信息立即通知</h3>
 		<div class="card">
 			<label>卡号</label><input type="text" id="card" class="input" placeholder="失主学号"/>	
 		</div>
@@ -241,26 +49,39 @@ footer li a{
 			<ul>
 			<li>平台目的：<strong>第一时间</strong>通知到失主</li>
 			<li>通知方式：系统短信，系统邮件</li>
-			<li>辅助方式：微博广播,校内私信（目前仅支持南开）</li>
+			<li>辅助方式：微博广播,校内私信（暂支持南开）</li>
 			<li>支持内容：校园卡，学生证等学号姓名关联内容</li>
-			<p>PS：当如果失主绑定了云印服务账号会立即通知失主，否则采用辅助方式。<br/>
-			为保护隐私保护，所有通知由系统直接发送，<strong>不可查看</strong>失主信息</p>
+			<p>PS：若失主绑定了云印账号会立即通知失主，否则采用辅助方式。<br/>
+			为保护隐私保护，所有通知由系统发送，<strong>不可查看</strong>失主信息</p>
 			</ul>
 		</div>
 		<div class="intro">
 			<h3>防滥用和骚扰</h3>
 			<ul>
-			<li>信息统计：系统会统计每条招领信息并以此进行保护限制</li>
+			<li>信息统计：系统会统计招领信息并以此进行保护限制</li>
 			<li>使用限制：云印用户限制3次，临时用户限制1次</li>
 			<li>骚扰防止：失主最多收到三次通知</li>
 			<li>失主举报：一旦举报，使用者将永久封禁此功能</li>
-			<li>失主确认：失主确认后，找回者将收到感谢，并解除限制</li>
-			<p>PS：限制次数指可以联系的失主</p>
+			<li>失主确认：失主确认后，您将收到感谢，并解除限制</li>
+			<p>PS：限制次数指可以发送招领通知的次数</p>
 			</ul>
 		</div>
 	</div>
-<footer ><ul ><li><a target="_blank" href="http://www.yunyin.org/">©云印南天</a></li><li><a target="_blank" rel="nofollow" href="https://github.com/YunYinORG/">开源项目</a></li><li><a>by:梁崇军|NewFuture|Crisone</a></li> <li><a href="">合作:NKBBS</a></li></footer>
+<footer><hr/>
+<ul ><li><a target="_blank" href="http://www.yunyin.org/">©云印南天</a></li><li><a target="_blank" rel="nofollow" href="https://github.com/YunYinORG/">开源项目</a></li><li><a>贡献者:梁崇军|NewFuture|江源</a></li> <li><a target="_blank" href="http://bbs.nankai.edu.cn">合作:NKBBS</a></li></footer>
 </body>
 <script type="text/javascript" src="/static/jquery/2.1.1/jquery.min.js"></script>
 <script src="/static/js/card.js" defer="defer"></script>
+<div id="login-modal" class="mdoal" style="display:none">
+<div class="content">
+	<h2>无法获取您的信息,请登录后以继续</h2>
+<p>无需注册，直接使用。<br/>如果您是南开或者天大的同学,请用云印校园账号登录,如果<strong>不是学生</strong>使用手机号登录</p>
+<p>登录后回到本页面即可继续！</p>
+<div>
+	<a href="http://api.yunyin.org" target="_blank"><button class="btn">校园账号登录【推荐】</button></a>
+	<button class="btn">临时登录【用手机号】</button>
+</div>
+</div>
+
+</div>  
 </html>

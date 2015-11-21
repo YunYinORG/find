@@ -1,17 +1,51 @@
-html {
-	margin:0;
-	padding: 0;
-	text-align:center;
-	height:100%;
-	width:100%;
-	overflow-x: hidden;
+html{overflow-x:hidden;height:100%}
+body,html{margin:0;padding:0;width:100%;text-align:center}
+body{position:relative;min-height:98%;background-color:#57c3ea;color:#fff}
+hr{border:1px double #dedede}
+.btn,.err,.input{margin-top:1%;margin-bottom:2%;background-color:transparent;color:#fff;text-align:center;font-size:1.5em;font-family:Lato,Helvetica,Arial,sans-serif;line-height:1.8em}
+label{width:8%;color:#eee;font-size:1.1em;line-height:1.8em}
+.form{margin:2em auto 1em;width:90%;border:4px dashed #eee;color:#fff}
+.input{width:77%;border:0;border-bottom:5px solid #fff}
+.input::-moz-placeholder{color:#eee}
+.input::-webkit-input-placeholder{color:#eee}
+.input:-ms-input-placeholder{color:#eee}
+.btn:active,.btn:hover,.input:focus{border:5px double #fff;background:#fefefe;color:#57c3ea;font-weight:bolder}
+.input:active,.input:hover{border-bottom:5px dotted;font-weight:bolder}
+.btn{padding:2px;width:80%;border:5px double #fff;color:#fff;cursor:pointer}
+.info{display:flex;margin:auto;text-align:center;-webkit-flex-flow:row wrap}
+.info .intro{display:inline-block;margin:auto;width:42%;height:95%;border:1px double #dedede;text-align:left}
+.intro:first-of-type{margin-left:5%}
+.intro:last-of-type{margin-right:5%}
+h3{text-align:center}
+li{list-style:none;font-size:1.2em}
+.how{margin:auto;width:90%;height:150px;max-height:150px;border:dotted #ddd}
+.how,.step{text-align:center}
+.step{display:inline-block;width:150px;height:100%;border-radius:50%;background:#eee;vertical-align:middle;font-size:1.1em}
+.step,h3>a{color:#57c3ea}
+h3>a{text-decoration:none}
+.to{display:inline-block;width:0;height:0;border-top:40px solid transparent;border-bottom:40px solid transparent;border-left:60px solid #eee;vertical-align:middle;font-size:0;line-height:0}
+footer li{display:inline;padding:10px;color:#ddd}
+footer li a{color:#ddd;text-decoration:none}
+.err{position:absolute;margin:auto;padding:0;width:90%;background-color:#cf00f3;font-size:1.2em}
+.mdoal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:9000;background-color:rgba(0,0,0,.5);transition:opacity .3s ease}
+.mdoal .content{margin:auto;margin-top:50px;padding:15px;width:80%;height:80%;border-radius:1%;background-color:#eee;color:#5de;font-size:1.1em}
+.mdoal .btn{width:45%;border-color:#5de;background-color:#eee;color:#6de}
+@media(max-width:980px){.how{margin:auto;border:dotted #ddd}
+.how,.step{height:130px}
+.step{width:130px;max-width:180px;font-size:1.1em}
+.to{border-top:20px solid transparent;border-bottom:20px solid transparent;border-left:24px solid #eee}
 }
-body {
-	margin: 0;
-	padding: 0;
-	background-color:#57c3ea;
-	color:#FFF;
-	position:relative;
-	width:100%;
-	min-height:98%
+@media(max-width:719px){h3{margin-bottom:3px}
+.how{margin:auto;border:dotted #ddd}
+.how,.step{height:115px}
+.step{width:115px;font-size:1em}
+.to{border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:15px solid #eee}
+.info .intro{margin:auto;width:90%}
+.intro:first-of-type,.intro:last-of-type{margin-right:auto!important;margin-left:auto!important}
+}
+@media(max-width:619px){h3{margin:5px}
+.how{margin:auto;max-height:750pt;border:none}
+.how,.step{display:inherit;height:auto}
+.step{margin:1px auto;padding:1px;width:90%;max-width:90%}
+.to,label{display:none}
 }
