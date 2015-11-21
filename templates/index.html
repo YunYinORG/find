@@ -21,11 +21,12 @@ body {
 	color:#FFF;
 	position:relative;
 	width:100%;
-	min-height:98%
+	min-height:98%;
+	text-align: center;
 }
 
 /*#obj{color:blue;overflow:hidden;width:450px;position:absolute;top:32%;left:12%;height:200px;}*/
-.input,.btn{
+.input,.btn,.err{
 	color: #FFF;
 	background-color: transparent;
 	text-align: center;
@@ -38,18 +39,18 @@ body {
 label{
 	width: 8%;
 	color: #FEFEFE;
-	 font-size: 1em;
+	 font-size: 1.1em;
     line-height: 1.8em;
 }
 .form{
 	margin: 2em auto 1em auto;
 	width: 90%;
-	border:1px solid #ccc;
+	border:4px dashed #eee;
 }
 .input{
     border: 0px;
     width: 77%;
-    border-bottom: 2px solid;
+    border-bottom: 2px solid #FFF; 
 }
 .input::-moz-placeholder { color: #eee; }
 .input::-webkit-input-placeholder { color:#eee; }
@@ -79,11 +80,17 @@ label{
 }
 .info .intro{
 	margin: auto;
-	width: 45%;
+	width: 42%;
 	height: 95%;
-	border: 1px solid;
+	border: 1px double;
 	text-align: left;
 	display: inline-block;
+}
+.intro:first-of-type{
+	margin-left: 5%;
+}
+.intro:last-of-type{
+	margin-right:5%;
 }
 h3{
 	text-align: center;
@@ -93,11 +100,12 @@ li{
 	font-size: 1.2em;
 }
 .how{
+width: 90%;
 text-align: center;
 height: 150px;
 max-height: 150px;
-width: 100%;
-margin: 0;
+margin: auto;
+border: dotted #ddd;
 	/*display: flex;*/
 }
 .step{
@@ -131,6 +139,66 @@ footer li a{
 	color: #DDD;
 	text-decoration: none;
 }
+.card{
+	margin-top:1.2em;
+}
+.err{
+	background-color: #CF00F3;
+	padding: 0;
+	margin: auto;
+	width: 90%;
+	position: absolute;
+	font-size: 1.1em;
+	/*border: 1px dotted #CF00F3;*/
+	/*margin: auto;*/
+}
+@media(max-width: 930px){
+
+	.how{
+		margin: auto;
+		border: dotted #ddd;
+		height: 120px;
+	}
+	.step{
+		max-width: 180px;
+		width: 120px;
+		height: 120px;
+		font-size: 1em;
+	}
+	.to{
+    border-top:20px solid transparent;
+    border-bottom:20px solid transparent;
+    border-left: 24px solid #FFF;
+    }
+	.info .intro{
+		width:90%; 
+	}
+}
+@media(max-width: 670px){
+	.how{
+		margin: auto;
+		border: dotted #ddd;
+		display: inherit;
+		height: auto;
+		max-height: 1000px;
+	}
+	.step{
+		width: 90%;
+		border:0 none;
+		border-radius:0;
+		display: inherit;
+		margin: 1px auto 1px auto;
+		height: auto;
+		padding:1px;
+		max-width: 90%;
+	}
+	.to,label{
+		display:none;
+    }
+	.info .intro{
+		width:90%; 
+	}
+}
 </style>
 </head>
 <body>
@@ -138,36 +206,35 @@ footer li a{
 <h2>南开大学天津大学校园卡招领</h2>
 <div class="how">
 	<div class="step first">
-		<h3>登录</h3>
+		<h3>1.登录</h3>
 		<p>使用云印校园账号或者手机号</p>
 	</div>
 	<div class="to"></div>
 	<div class="step second">
-		<h3>验证</h3>
+		<h3>2.验证</h3>
 		<p>验证失主信息(学号+姓名)</p>
 	</div>
 	<div class="to"></div>
 	<div class="step third">
-		<h3>系统通知</h3>
+		<h3>3.系统通知</h3>
 		<p>系统发送通知告知失主</p>
 	</div>
 	<div class="to"></div>
 	<div class="step last">
-		<h3>失主确认</h3>
+		<h3>4.失主确认</h3>
 		<p>等待失主联系您和确认</p>
 	</div>	
 </div>
-	<div>
-		<form class="form">
-		<div>
-			<label>卡号</label><input type="text" class="input" placeholder="失主学号"/>
+		<div class="form">
+		<div id="err" class="err"></div>
+		<div class="card">
+			<label>卡号</label><input type="text" id="card" class="input" placeholder="失主学号"/>	
 		</div>
-		<div>
-			<label>姓名</label><input type="text" class="input" placeholder="失主姓名" />
-		</div>	
-			<button type="submit" class="btn">验证并通知</button>
-		</form>
-	</div>
+		<div class="name">
+			<label>姓名</label><input type="text" id="name" class="input" placeholder="失主姓名"/>
+		</div>
+			<button id="submit" type="submit" class="btn">通知失主</button>
+		</div>
 	<div class="info">
 		<div class="intro">
 			<h3>服务简介</h3>
@@ -194,4 +261,6 @@ footer li a{
 	</div>
 <footer ><ul ><li><a target="_blank" href="http://www.yunyin.org/">©云印南天</a></li><li><a target="_blank" rel="nofollow" href="https://github.com/YunYinORG/">开源项目</a></li><li><a>by:梁崇军|NewFuture|Crisone</a></li> <li><a href="">合作:NKBBS</a></li></footer>
 </body>
+<script type="text/javascript" src="/static/jquery/2.1.1/jquery.min.js"></script>
+<script src="/static/js/card.js" defer="defer"></script>
 </html>
