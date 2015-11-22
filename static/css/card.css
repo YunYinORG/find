@@ -27,9 +27,18 @@ h3>a{text-decoration:none}
 footer li{display:inline;padding:10px;color:#ddd}
 footer li a{color:#ddd;text-decoration:none}
 .err{position:absolute;margin:auto;padding:0;width:90%;background-color:#cf00f3;font-size:1.2em}
-.mdoal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:9000;background-color:rgba(0,0,0,.5);transition:opacity .3s ease}
-.mdoal .content{margin:auto;margin-top:50px;padding:15px;width:80%;height:80%;border-radius:1%;background-color:#eee;color:#5de;font-size:1.1em}
-.mdoal .btn{width:45%;border-color:#5de;background-color:#eee;color:#6de}
+.modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:9000;background-color:rgba(0,0,0,.5);transition:opacity .3s ease}
+.modal .content{margin:auto;margin-top:50px;padding:15px;width:80%;height:80%;border-radius:1%;background-color:#eee;color:#5de;font-size:1.1em}
+.modal .btn{width:45%;border:5px double #eee;background-color:#5de;color:#FFF;border-radius: 3%;margin: 1% auto 1% auto;}
+.modal .input{border:3px solid #5de;color:#5de;line-height: 1.8em;margin: 1% auto 1% auto;}
+.modal .input::-moz-placeholder{color:gray}
+.modal .input::-webkit-input-placeholder{color:gray}
+.modal .input:-ms-input-placeholder{color:gray}
+.modal .input:hover,.modal .input:active,.modal .input:focus{
+	color: #FFF;background: #5de;border: 3px solid #eee;}
+.code:hover,.code:active,.code:focus{font-weight: inherit;border: 5px double #eee !important;}
+.auto{clear: both; width: auto !important;min-width: 30%;max-width: 80%}
+.close{float: right;height: 1.2em;width: 1.2em;border: 3px solid;text-align: center;vertical-align: middle;border-radius: 50%;cursor: pointer;}
 @media(max-width:980px){.how{margin:auto;border:dotted #ddd}
 .how,.step{height:130px}
 .step{width:130px;max-width:180px;font-size:1.1em}

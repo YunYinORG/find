@@ -67,4 +67,16 @@ $('#submit').click(function(){
 		})
 	}
 });
+$('.close').click(function(){$('.modal').hide();});
 $('.login').click(function(){$('#login-modal').show();});
+//临时注册
+$('#opne_phone_login').click(function(){
+	$('.modal').hide();
+	$('#sms-code').hide();
+	$('#phone-modal').show();
+	$('#user').show();
+});
+//提交手机号
+$('#submit-phone').click(function(){
+	$('#sms-code').show();
+});
