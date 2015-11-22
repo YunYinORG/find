@@ -1,23 +1,25 @@
 #!/usr/bin/env python
 #coding=utf-8
 import web
-from yunyin import yunyin
+import yunyin as yy
 
-class user(object):
-	#获取当前的用户名
-	@staticmethod
-	def getName():
-		# name=web.session(name=False)
-		if not name:
-			return False
-	#获取当前用户的id
-	@staticmethod
-	def getId():
-		y=yunyin()
-		return y.getUser()
-	
-	#获取电话
-	@staticmethod
-	def getPhone():
+#获取当前的用户名
+def getName():
+	# name=web.session(name=False)
+	current_user=yy.getUser()
+	if not current_user:
 		return False
+	else:
+		return current_user['name']
+#获取当前用户的id
+def getId():
+	current_user=yy.getUser()
+	if current_user:
+		return current_user['id']
+	else:
+		return None
+
+#获取电话
+def getPhone():
+	return False
 

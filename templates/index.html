@@ -1,3 +1,4 @@
+$def with (name)
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -6,20 +7,26 @@
   	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
   	<link rel="stylesheet" type="text/css" href="/static/css/card.css">
 <style type="text/css">
+a{color: inherit;text-decoration: none;}
 </style>
 </head>
 <body>
 <h1>校园卡招领</h1>
 <h2>南开大学天津大学校园卡招领</h2>
 <div class="how">
-	<div class="step first">
-		<h3>1.登录</h3>
-		<p>使用云印校园账号或者手机号</p>
-	</div>
+<div class="step first">
+$if name:
+	<h3>1.登录</h3><p>$name 已经登录</p>
+$else:
+	<a href="#login-modal" class="login"><h3>1.登录</h3><p>使用云印校园账号或手机号</p></a>
+</div>
 	<div class="to"></div>
+	
 	<div class="step second">
-		<h3><a href="#verify">2.验证</a></h3>
+	<a href="#verify">
+		<h3>2.验证</h3>
 		<p>验证失主信息(学号+姓名)</p>
+	</a>
 	</div>
 	<div class="to"></div>
 	<div class="step third">

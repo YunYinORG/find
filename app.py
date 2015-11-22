@@ -1,15 +1,18 @@
 #!/usr/bin/env python
 #coding=utf-8
 import sys,os
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
 abspath = os.path.dirname(__file__)#兼容wsgi
 sys.path.append(abspath)
 if abspath:os.chdir(abspath)
+
 import web
 
 from controller.index import index
 from controller.notify import notify,broadcast
 
-from lib.yunyin import yunyin
+import lib
 
 web.config.debug = True
 web.DEBUG=True
@@ -27,10 +30,7 @@ urls = (
 
 class test:
     def GET(self):
-        # cookie=web.cookies().get('token')
-        y=yunyin()
-        user=y.getUser()
-        return user
+        return "it works"
 
 #启动服务
 app = web.application(urls, globals())

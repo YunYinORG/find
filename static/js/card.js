@@ -26,18 +26,10 @@ function getName(focus)
 		return name;
 	}
 }
-function displayErr(msg)
-{
-	$('#err').html(msg);
-}
-$('#card').blur(function()
-	{
-		if($(this).val()&&getcard())displayErr('');
-	});
-$('#name').blur(function()
-	{
-		if($(this).val()&&getName())displayErr('');
-	});
+function displayErr(msg){$('#err').html(msg);}
+$('#card').blur(function(){if($(this).val()&&getcard())displayErr('');});
+$('#name').blur(function(){if($(this).val()&&getName())displayErr('');});
+
 $('#submit').click(function(){
 	var number,name;
 	if((number=getcard(true))&&(name=getName(true)))
@@ -47,16 +39,32 @@ $('#submit').click(function(){
 		var data={number:number,name:name};
 		$.post('/notify/', data, function(result)
 		{
-			if(result.status==0)
+			switch(result.status)
 			{
-				$('#login-modal').show();
-				$('#submit').text('通知失主').removeAttr('disabled');
-			}else if(result.status==1)
-			{
-				$('#submit').text('已通知');
-				$('input').attr('disabled','disabled');
-				$('#err').html("已经通知"+name+"["+number+"]");
+				case 0://未登录
+					$('#login-modal').show();
+					$('#submit').text('通知失主').removeAttr('disabled');
+					break;
+				case 1://通知成功
+					$('#submit').text('已通知');
+					$('input').attr('disabled','disabled');
+					$('#err').html("已经通知"+name+"["+number+"]");
+					break;
+				case -1://验证失败
+					displayErr(result['message']);
+					$('#submit').text('通知失主').removeAttr('disabled');
+					break;
+				case 2://广播
+					break;
+				default:
+					if (result['message'])
+					{
+						displayErr(result['message']);
+					}
+					$('#submit').text('通知失主').removeAttr('disabled');
+					break;
 			}
 		})
 	}
 });
+$('.login').click(function(){$('#login-modal').show();});

@@ -16,3 +16,6 @@ DB_PWD = ''
 DB_NAME = 'yunyinfind'
 DB_PORT = 3306
 
+#云印接口
+YUNYIN_KEY="yunyincard"
+YUNYIN_API="http://api.yunyin.org/"

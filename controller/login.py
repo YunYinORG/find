@@ -5,5 +5,3 @@ from lib.yunyin import yunyin
 class login:
 	
 	
-
-	
