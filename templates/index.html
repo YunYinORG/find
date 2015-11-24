@@ -5,12 +5,13 @@ $def with (name)
 	<meta charset="UTF-8">
   	<title>云印南天—招领服务</title>
   	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
-  	<link rel="stylesheet" type="text/css" href="/static/css/card.css">
+  	<link rel="stylesheet" type="text/css" href="/static/css/card.css?2">
 <style type="text/css">
 a{color: inherit;text-decoration: none;}
 </style>
 </head>
 <body>
+<div id="main">
 <h1>校园卡招领</h1>
 <h2>南开大学天津大学校园卡招领</h2>
 <div class="how">
@@ -75,18 +76,16 @@ $else:
 		</div>
 	</div>
 <footer><hr/>
-<ul ><li><a target="_blank" href="http://www.yunyin.org/">©云印南天</a></li><li><a target="_blank" rel="nofollow" href="https://github.com/YunYinORG/">开源项目</a></li><li><a>贡献者:梁崇军|NewFuture|江源</a></li> <li><a target="_blank" href="http://bbs.nankai.edu.cn">合作:NKBBS</a></li></footer>
-</body>
-<script type="text/javascript" src="/static/jquery/2.1.1/jquery.min.js"></script>
-<script src="/static/js/card.js" defer="defer"></script>
+<ul><li><a target="_blank" href="http://www.yunyin.org/">©云印南天</a></li><li><a target="_blank" rel="nofollow" href="https://github.com/YunYinORG/">开源项目</a></li><li><a>贡献者:梁崇军|NewFuture|江源</a></li> <li><a target="_blank" href="http://bbs.nankai.edu.cn">合作:NKBBS</a></li></ul></footer>
+</div>
 <div id="login-modal" class="modal" style="display:none">
 <div class="content"><div class="close">×</div>
 	<h2>无法获取您的信息,请登录后以继续</h2>
 <p>无需注册，直接使用。<br/>如果您是南开或者天大的同学,请用云印校园账号登录,如果<strong>不是学生</strong>使用手机号登录</p>
 <p>登录后回到本页面即可继续！</p>
 <div>
-	<a href="http://api.yunyin.org" target="_blank"><button class="btn auto">校园账号登录【推荐】</button></a>
-	<button id="opne_phone_login" class="btn auto">临时登录【用手机号】</button>
+	<a href="http://api.yunyin.org" target="_blank"><button class="auto">校园账号登录【推荐】</button></a>
+	<button id="opne_phone_login" class="auto">临时登录【用手机号】</button>
 </div>
 </div>
 </div>
@@ -98,11 +97,11 @@ $else:
 	<div>
 	<input type="text" class="input" id="phone" name="phone" placeholder="您的手机"/>
 	<input style="display: none" type="text" class="input" id="user" name="name" placeholder="您的姓名">
-	<button class="btn auto" id="submit-phone">发送验证码</button>
+	<button class="auto" id="submit-phone">发送验证码</button>
 	</div>
 	<div id="sms-code" style="display:none">
 	<input type="text" class="input auto code" id="code" name="code" placeholder="验证码" autocomplete="off">
-	<button class="btn auto" id="submit-phone">验证</button>
+	<button class="auto" id="submit-phone">验证</button>
 	</div>
 </div>
 </div>
@@ -113,9 +112,12 @@ $else:
 	<p></p>
 	<div>
 	<textarea></textarea>
-	<button class="btn auto" id="submit-phone">验证</button>
+	<button class="auto" id="submit-phone">验证</button>
 	</div>
 </div>
 </div>
 
+</body>
+<script type="text/javascript" src="/static/jquery/2.1.1/jquery.min.js?2"></script>
+<script src="/static/js/card.js" defer="defer"></script>
 </html>

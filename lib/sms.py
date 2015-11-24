@@ -1,11 +1,27 @@
 #!/usr/bin/env python
-#coding=utf-8
+# coding=utf-8
+import ucpass
+import config
+import json
 
-class sms(object):
-	"""
-	sms
-	短信发送
-	"""
-	def __init__(self, arg):
-		super(sms, self).__init__()
-		self.arg = arg
+
+def _sendSms(to, templateId, param):  # 发送短信
+    result = ucpass.templateSMS(config.SMS_ACCOUNT, config.SMS_TOKEN, config.SMS_APPID, to, templateId, param)
+    try:
+        result = json.loads(result)
+        return result["resp"]["respCode"] == "000000"
+    except Exception:
+        return None
+
+
+def sendBind(to, code):
+    param = "%s,3" % (code)
+    return _sendSms(to, config.SMS_BIND, param)
+
+
+def sendNotify(to, msg):
+    pass
+
+
+def sendLogin(to, msg):
+    pass

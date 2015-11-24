@@ -1,10 +1,14 @@
 #!/usr/bin/env python
-#coding=utf-8
+# coding=utf-8
 import web
-from lib import user
-# session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'count': 0})
+import lib.user as user
+
+
 class index:
-	def GET(self):
-		html = web.template.frender('templates/index.html')
-		name=user.getName()
-		return html(name)
+
+    """首页"""
+
+    def GET(self):
+        html = web.template.frender('templates/index.html')
+        name = user.getName()
+        return html(name)

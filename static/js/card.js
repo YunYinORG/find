@@ -27,6 +27,7 @@ function getName(focus)
 	}
 }
 function displayErr(msg){$('#err').html(msg);}
+function showModal(name){$('#main').hide();$('.modal').hide();$('#'+name+'-modal').show()};
 $('#card').blur(function(){if($(this).val()&&getcard())displayErr('');});
 $('#name').blur(function(){if($(this).val()&&getName())displayErr('');});
 
@@ -42,7 +43,7 @@ $('#submit').click(function(){
 			switch(result.status)
 			{
 				case 0://未登录
-					$('#login-modal').show();
+					showModal('login');
 					$('#submit').text('通知失主').removeAttr('disabled');
 					break;
 				case 1://通知成功
@@ -67,13 +68,12 @@ $('#submit').click(function(){
 		})
 	}
 });
-$('.close').click(function(){$('.modal').hide();});
-$('.login').click(function(){$('#login-modal').show();});
+$('.close').click(function(){$('.modal').hide();$("#main").show()});
+$('.login').click(function(){showModal('login');});
 //临时注册
 $('#opne_phone_login').click(function(){
-	$('.modal').hide();
 	$('#sms-code').hide();
-	$('#phone-modal').show();
+	showModal('phone');
 	$('#user').show();
 });
 //提交手机号
