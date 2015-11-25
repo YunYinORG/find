@@ -7,6 +7,8 @@ import json
 
 def _sendSms(to, templateId, param):  # 发送短信
     result = ucpass.templateSMS(config.SMS_ACCOUNT, config.SMS_TOKEN, config.SMS_APPID, to, templateId, param)
+    if not result:
+        return False
     try:
         result = json.loads(result)
         return result["resp"]["respCode"] == "000000"

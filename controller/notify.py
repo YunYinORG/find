@@ -64,7 +64,5 @@ class notify:
 class broadcast:
 
     def POST(self):
+        """发送广播"""
         return "post"
-
-    def GET(self):
-        return "GET"

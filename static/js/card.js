@@ -2,7 +2,7 @@ function getcard(focus)
 {
 	var card=$('#card')
 	var number=card.val().trim();
-	var reg=/^\d{7}|\d{10}$/;
+	var reg=/^(\d{7}|\d{10})$/;
 	if(!reg.test(number))
 	{
 		displayErr("校园卡号格式不对哦！");
