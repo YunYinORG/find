@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 # coding=utf-8
-import ucpass
+from ucpass import templateSMS
+from json import loads
 import config
-import json
 
 
 def _sendSms(to, templateId, param):  # 发送短信
-    result = ucpass.templateSMS(config.SMS_ACCOUNT, config.SMS_TOKEN, config.SMS_APPID, to, templateId, param)
+    result = templateSMS(config.SMS_ACCOUNT, config.SMS_TOKEN, config.SMS_APPID, to, templateId, param)
     if not result:
         return False
     try:
-        result = json.loads(result)
+        result = loads(result)
         return result["resp"]["respCode"] == "000000"
     except Exception:
         return None

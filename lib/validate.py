@@ -2,8 +2,9 @@
 # coding=utf-8
 import re
 from config import REGX_SHOOL
+
 _regex_phone = '^1[34578]\d{9}$'
-_regex_name = u'^[\u4E00-\u9FA5]{2,5}(·[\u4E00-\u9FA5]{2,8})?$'
+_regex_name = ur'^[\u4E00-\u9FA5]{2,5}(·[\u4E00-\u9FA5]{2,8})?$'
 
 
 def phone(number):
@@ -13,7 +14,7 @@ def phone(number):
 
 def name(string):
     """姓名验证"""
-    return string and (re.match(_regex_name, str(string)) != None)
+    return string and (re.match(_regex_name, string.decode('utf-8')) != None)
 
 
 def card(number):

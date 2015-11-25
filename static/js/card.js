@@ -27,9 +27,20 @@ function getName(focus)
 	}
 }
 function displayErr(msg){$('#err').html(msg);}
+function ModalErr(msg){ if (msg){$('#err-modal').html(msg).show(200);}else{$('#err-modal').html('').hide();}}
 function showModal(name){$('#main').hide();$('.modal').hide();$('#'+name+'-modal').show()};
 $('#card').blur(function(){if($(this).val()&&getcard())displayErr('');});
 $('#name').blur(function(){if($(this).val()&&getName())displayErr('');});
+$('.close').click(function(){$('.modal').hide();$("#main").show();$('#err-modal').hide()});
+$('#err-modal').click(function(){$(this).hide(200)});
+$('.login').click(function(){showModal('login');});
+//临时注册
+$('#opne_phone_login').click(function(){
+	$('#sms-code').hide();
+	showModal('phone');
+	$('#phone-msg').html('非学生可使用手机号作为临时账号(<a href="http://api.yunyin.org" target="_blank">该校学生请使用云印校园账号登录</a>)，为了防止滥用和骚扰，只允许发送一次信息(直到确认找回)');
+	$('#user').show();
+});
 
 $('#submit').click(function(){
 	var number,name;
@@ -51,10 +62,17 @@ $('#submit').click(function(){
 					$('input').attr('disabled','disabled');
 					$('#err').html("已经通知"+name+"["+number+"]");
 					break;
+				case -2://需要绑定手机
+					$('#sms-code').hide();
+					$('#user').hide();
+					showModal('phone');
+					$('#phone-msg').text('发送消息前，需要验证您的手机');
+					break;
 				case -1://验证失败
 					displayErr(result['message']);
 					$('#submit').text('通知失主').removeAttr('disabled');
 					break;
+
 				case 2://广播
 					break;
 				default:
@@ -68,15 +86,71 @@ $('#submit').click(function(){
 		})
 	}
 });
-$('.close').click(function(){$('.modal').hide();$("#main").show()});
-$('.login').click(function(){showModal('login');});
-//临时注册
-$('#opne_phone_login').click(function(){
-	$('#sms-code').hide();
-	showModal('phone');
-	$('#user').show();
-});
+
 //提交手机号
 $('#submit-phone').click(function(){
-	$('#sms-code').show();
+	var phone=$('#phone').val();
+	if(!/^1[34578]\d{9}$/.test(phone))
+	{
+		ModalErr('手机号格式有误，检查一下')
+		$('#phone').focus();
+		return false;
+	}
+	var data={'phone':phone};
+	var nameInput=$('#user')
+	var name=nameInput.val();
+	if(nameInput.css('display')!='none')
+	{
+		if(!/^[\u4E00-\u9FA5]{2,4}/.test(name))
+		{
+			ModalErr('请填写正确的中文姓名哦!');
+			nameInput.focus();
+			return false;
+		}else{
+			data['name']=name
+		}
+	}
+	ModalErr('');
+	$(this).attr('disabled','disabled');
+	$.post('/phone/',data,function(result){
+		if(result.status==1)
+		{
+			$('#sms-code').show();
+			setTimeout(function(){
+				$("#submit-phone").removeAttr('disabled');
+			},1000)
+		}else{
+			ModalErr(result.message);
+			$("#submit-phone").removeAttr('disabled');
+		}
+	});
+});
+//提交验证码
+$('#submit-code').click(function(){
+	var code=$('#code').val()
+	if(!/^\d{4,6}$/.test(code))
+	{
+		ModalErr('验证码是4到6位数字哦！');
+		$('#code').empty().focus();
+		return false;
+	}
+	$(this).attr('disabled','disabled');
+	ModalErr('');
+	$.post('/phone/code',{'code':code},function(result){
+		if(result.status==1)
+		{
+			$('.close').click();
+			$('.first').html('<h3>已登录</h3><p>'+result.message+'</p>');
+		}else{
+			ModalErr(result.message);
+			if(result.status==-1)
+			{
+				$('#sms-code').hide();
+			}else{
+				$('#code').empty().focus();
+			}
+		}
+		$('#submit-code').removeAttr('disabled');
+	});
+
 });

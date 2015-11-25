@@ -22,8 +22,8 @@ def getUser():
         if not yyuser:
             return None
         else:
-            saveUser(user['name'], user['id'])
-            return user
+            saveUser(yyuser['name'], yyuser['id'])
+            return yyuser
 
 
 def getName():
@@ -43,7 +43,7 @@ def getPhone():
     elif user.has_key('call'):  # 信息中不包含手机
         return user['call']
     else:
-        phone = yy.getPhone(user['yid'])
+        phone = yy.getPhone(user['yyid'])
         if not phone:
             return None
         else:

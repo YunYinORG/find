@@ -93,15 +93,16 @@ $else:
 <div id="phone-modal" class="modal" style="display:none">
 <div class="content"><div class="close">×</div>
 	<h2>验证您的手机以继续</h2>
-	<p>非学生可使用手机号作为临时账号，为了防止滥用和骚扰，只允许发送一次信息(直到确认找回)</p>
+	<p id="phone-msg">非学生可使用手机号作为临时账号，为了防止滥用和骚扰，只允许发送一次信息(直到确认找回)</p>
+	<p>之后失主可以通过此手机联系您！</p>
 	<div>
 	<input type="text" class="input" id="phone" name="phone" placeholder="您的手机"/>
 	<input style="display: none" type="text" class="input" id="user" name="name" placeholder="您的姓名">
 	<button class="auto" id="submit-phone">发送验证码</button>
 	</div>
 	<div id="sms-code" style="display:none">
-	<input type="text" class="input auto code" id="code" name="code" placeholder="验证码" autocomplete="off">
-	<button class="auto" id="submit-phone">验证</button>
+	<input type="text" class="input code" id="code" name="code" placeholder="验证码" autocomplete="off">
+	<button class="auto" id="submit-code">验证</button>
 	</div>
 </div>
 </div>
@@ -117,6 +118,7 @@ $else:
 </div>
 </div>
 
+<div id='err-modal'>错误提示</div>
 </body>
 <script type="text/javascript" src="/static/jquery/2.1.1/jquery.min.js?2"></script>
 <script src="/static/js/card.js" defer="defer"></script>

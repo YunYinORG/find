@@ -1,68 +1,69 @@
 #!/usr/bin/env python
 # coding=utf-8
 import web
-import json
-from lib import yunyin, user
-# import settings
+from lib import yunyin, user, validate, cookie
+from lib.response import json
+
+NO_USER = 2
 SUCCESSS = 1
-NODATA = 2
 UNLOGIN = 0
-NOPHONE = -1
-RETRY = 1
+RETRY = -1
+NO_PHONE = -2
 
 
 class notify:
 
     def POST(self):
+        """验证通知"""
         info = web.input(number=None, name=None)
-        response = {}
-        if info.name == None or info.number == None:
-            # 输入无效
-            response['status'] = -5
-            response['message'] = "数据无效"
-        elif not user.getUser():
-            # 未登录
-            response['status'] = 0
-            response['message'] = "未登录"
-        else:
+        school = validate.school(info['number'])
+        if info.name == None or info.number == None:  # 输入无效
+            return json(-5, "数据无效")
+        elif not user.getUser():      # 未登录
+            return json(UNLOGIN, "未登录")
+        elif not school > 0:  # 学号格式错误
+            return json(RETRY, "学号格式不对")
+        elif not validate.name(info['name']):  # 姓名错误
+            return json(RETRY, "请输入正确姓名")
+        else:  # 输入正常
             phone = user.getPhone()
             if not phone:
-                response['status'] = -1
+                return json(NO_PHONE, "需要验证手机后使用")
 
-            data = yunyin.verify(info['number'], info['name'])
-            if not data:
-                response['status'] = 2
-                response['school'] = 1
-                response['message'] = "无相关信息"
-            elif data['status'] == 1:  # 验证成功
-                response['status'] = 1
-                response['message'] = "发送成功!"
+            data = yunyin.verify(info['number'], info['name'], school)
+            if not data:  # 查询失败
+                return self.next(info, school, 0)
             elif data['status'] == -2:  # 验证不匹配
-                response['status'] = -1
-            else:
-                response['status'] = 2
+                return json(RETRY, "验证不匹配")
+            elif data['status'] != 1:  # 无该用户
+                return self.next(info, school, 0)
+            else:  # 验证成功
+                lost = data['info']
 
-        # yy = yunyin()
-        # lost_info = yy.verify(number,name)
-        # if lost_info == 0 or lost_info['status'] == -1:
-        # 	return
-        # else:
-        # 	if lost_info['status'] == 1:
-        # 		#发短信、邮箱
-        # 	elif lost_info['status'] == 0:
-        # 		#
-        # 		return lost_info['info']
-        # 	elif lost_info['status'] == -2:
-        # 		return '学号姓名不匹配'
-        web.header('Content-Type', 'application/json')
-        return json.dumps(response)
+                if lost['phone'] and self.phoneNotify(lost['phone']):
+                    return json(SUCCESSS, "通知成功")
+                elif lost['email']:  # 发送邮件
+
+                    return self.next(info, school, 1)
+                else:  # 联系方式
+                    return 1
 
     def GET(self):
-        return 'only post allowed'
+        return json(0, 'only post allowed')
+
+    def next(self, info, school, is_yunyin_user=0):  # 无手机号转入下一步
+        data = {'name': info['name'], 'card': info['number'], 'sch': school, 'in': is_yunyin_user}
+        cookie.set('b', data)
+        return json(NO_USER, school)
 
 
 class broadcast:
 
     def POST(self):
         """发送广播"""
-        return "post"
+        data = cookie.get('b')
+        if not data:
+            return json(0, '验证信息无效')
+        else:
+            cookie.delete('b')
+            return json(1, '发送成功')

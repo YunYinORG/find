@@ -3,11 +3,11 @@
 import web
 import urllib
 import urllib2
-import json
-import config
+from json import loads
+from config import YUNYIN_API as BASE_URL, YUNYIN_KEY as APIKEY
 
-BASE_URL = config.YUNYIN_API
-APIKEY = config.YUNYIN_KEY
+# BASE_URL = config.YUNYIN_API
+# APIKEY = config.YUNYIN_KEY
 
 
 def _get(url):
@@ -21,7 +21,7 @@ def _get(url):
         response = urllib2.urlopen(req)
         result = response.read()
         try:
-            return json.loads(result)  # 转成对象
+            return loads(result)  # 转成对象
         except Exception:
             return None
 
@@ -41,7 +41,7 @@ def _post(url, data=None):
     try:
         response = urllib2.urlopen(req)
         result = response.read()
-        result = json.loads(result)
+        result = loads(result)
         return result
     except Exception:
         return None
@@ -71,7 +71,7 @@ def getPhone(uid):
         return None
 
 
-def verify(number, name, school=None): #返回失主信息
+def verify(number, name, school=None):  # 返回失主信息
     """验证学号姓名"""
     url = BASE_URL + 'card'
     data = {'number': number, 'name': name, 'key': APIKEY, 'school': school}
@@ -82,6 +82,9 @@ def verify(number, name, school=None): #返回失主信息
         return None
 
 
-def bind_phone(): 
+def bindPhone(phone):
     """用户绑定手机号"""
-    pass
+    url = BASE_URL + 'card/phone'
+    data = {'phone': phone, 'key': APIKEY}
+    result = _post(url, data)
+    return result and (result['status'] == 1)
