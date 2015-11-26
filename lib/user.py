@@ -2,7 +2,7 @@
 # coding=utf-8
 import cookie
 import yunyin as yy
-
+from model.user import userModel
 
 def saveUser(name, yyid=None, phone=None):
     """保存用户信息"""
@@ -22,6 +22,7 @@ def getUser():
         if not yyuser:
             return None
         else:
+
             saveUser(yyuser['name'], yyuser['id'])
             return yyuser
 

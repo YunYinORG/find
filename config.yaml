@@ -5,6 +5,12 @@ handlers:
 
 - url: /robots.txt
   static_path: static/robots.txt
-  
+
 - url: /favicon.ico
   static_path: favicon.ico
+
+libraries:
+- name: PyCrypto
+  version: "2.6"
+- name: MySQLdb
+  version: "1.2.3"

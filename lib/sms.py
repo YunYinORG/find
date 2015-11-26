@@ -16,14 +16,24 @@ def _sendSms(to, templateId, param):  # 发送短信
         return None
 
 
+def sendLogin(to, code):
+    """临时登录验证"""
+    param = "%s,3" % (code)
+    return _sendSms(to, config.SMS_LOGIN, param)
+
+
 def sendBind(to, code):
+    """绑定手机"""
     param = "%s,3" % (code)
     return _sendSms(to, config.SMS_BIND, param)
 
 
-def sendNotify(to, msg):
-    pass
+def sendNotify(to, finder, finder_phone, site='http://find.yunyin.org', thing="校园卡"):
+    """发送通知"""
+    param = "%s,%s,%s,%s"(thing, finder, finder_phone, site)
+    return _sendSms(to, config.SMS_NOTIFY, param)
 
 
-def sendLogin(to, msg):
-    pass
+def sendResult(to, status):
+    """发送结果，感谢或者举报警告"""
+    return None
