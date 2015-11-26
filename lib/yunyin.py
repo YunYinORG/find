@@ -49,7 +49,7 @@ def _post(url, data=None):
 
 def getUser():
     """查询当前用户状态"""
-    url = BASE_URL+'user'
+    url = BASE_URL + 'user'
     result = _get(url)
     if not result:
         return False
@@ -59,9 +59,21 @@ def getUser():
         return None
 
 
-def getPhone(uid):
+def getDetail(yyid):
+    """查询当前用户学号"""
+    url = BASE_URL + 'user/' + str(yyid)
+    result = _get(url)
+    if not result:  # 请求失败
+        return False
+    elif result['status'] == 1:  # 查询操作成功
+        return result['info']
+    else:  # 查询操作失败
+        return None
+
+
+def getPhone(yyid):
     """查询当前用户的手机,返回手机号"""
-    url = BASE_URL + 'user/' + str(uid) + '/phone'
+    url = BASE_URL + 'user/' + str(yyid) + '/phone'
     result = _get(url)
     if not result:  # 请求失败
         return False

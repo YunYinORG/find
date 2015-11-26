@@ -10,9 +10,9 @@ sys.path.append(abspath)  # 兼容wsgi
 os.chdir(abspath)  # 更新目录
 
 import web
-import lib
 from controller import *
 
+web.config.debug = True
 # 启动服务
 app = web.application(urls, globals())
 if __name__ == "__main__":  # python直接启动服务
@@ -24,3 +24,4 @@ else:  # wsgi模式启动
 class test(object):
 
     def GET(self):
+        return "it works"

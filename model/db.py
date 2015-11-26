@@ -21,12 +21,13 @@ class Model(object):
 
     def find(self, uid=None, _field='*', **kwargs):
         """单个查询记录"""
-        if uid.isalnum():
-            where = "id=%i" % int(uid)
-        elif kwargs:
-            where = buildWhere(kwargs)
+        if uid and (isinstance(uid, int) or uid.isalnum()):
+            kwargs["id"] = int(uid)
+        elif isinstance(uid, str):
+            _field = uid
         else:
             return None
+        where = buildWhere(kwargs)
         result = db.select(self._table, where=where, limit=1, what=_field)
         if len(result) > 0:
             return result[0]
@@ -55,8 +56,10 @@ class Model(object):
         where = "id=%i" % int(uid)
         return db.update(self._table, where=where, **kwargs)
 
-    def add(self, **kwargs):
+    def add(self, data=None, **kwargs):
         """"添加用户"""
+        if type(data) == 'dict':
+            kwargs = data
         return kwargs and db.insert(self._table, **kwargs)
 
     def delete(self, uid):

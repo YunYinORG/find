@@ -4,7 +4,8 @@ import cookie
 import yunyin as yy
 from model.user import userModel
 
-def saveUser(name, yyid=None, phone=None):
+
+def saveUser(name, yyid=None, phone=None, uid=None):
     """保存用户信息"""
     user = {'name': name, 'yyid': yyid}
     if phone:
@@ -18,12 +19,19 @@ def getUser():
     if user:
         return user
     else:
-        yyuser = yy.getUser()
+        yyuser = yy.getUser()  # 云印用户
         if not yyuser:
             return None
         else:
-
-            saveUser(yyuser['name'], yyuser['id'])
+            yyid = yyuser['id']
+            user = userModel.find(_field='id,phone', yyid=yyid)
+            if not user:  # 数据库未同步
+                detail = yy.getDetail(yyid)
+                phone = detail['phone'] and yy.getPhone(yyid)
+                uid = userModel.add(yyid=yyuser['id'], name=yyuser['name'], phone=phone, number=detail['number'], school=yyuser['sch_id'])
+            else:
+                uid, phone = user.id, user.phone
+            saveUser(yyuser['name'], yyuser['id'], phone, uid=uid)
             return yyuser
 
 
