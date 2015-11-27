@@ -19,17 +19,20 @@ class Model(object):
     def __init__(self, table):
         self._table = table
 
-    def find(self, uid=None, _field='*', **kwargs):
+    def find(self, _id=None, _field='*', _test=False, **kwargs):
         """单个查询记录"""
-        if uid and (isinstance(uid, int) or uid.isalnum()):
-            kwargs["id"] = int(uid)
-        elif isinstance(uid, str):
-            _field = uid
-        else:
+        if _id:
+            try:
+                kwargs["id"] = int(_id)
+            except Exception:
+                _field = _id
+        elif not kwargs:
             return None
-        where = buildWhere(kwargs)
-        result = db.select(self._table, where=where, limit=1, what=_field)
-        if len(result) > 0:
+        where = webdb.sqlwhere(kwargs)
+        result = db.select(self._table, where=where, limit=1, what=_field, _test=_test)
+        if _test:
+            return result
+        elif len(result) > 0:
             return result[0]
 
     def select(self, _field='*', limit=10, offset=0, order=None, **kwargs):
@@ -42,7 +45,7 @@ class Model(object):
         if order:
             more['order'] = order
         if kwargs:
-            where = buildWhere(kwargs)
+            where = webdb.sqlwhere(kwargs)
             result = db.select(self._table, where=where, what=_field, **more)
         else:
             result = db.select(self._table, what=_field, **more)
@@ -51,9 +54,9 @@ class Model(object):
         else:
             return None
 
-    def save(self, uid, **kwargs):
+    def save(self, _id, **kwargs):
         """更新数据"""
-        where = "id=%i" % int(uid)
+        where = "id=%i" % int(_id)
         return db.update(self._table, where=where, **kwargs)
 
     def add(self, data=None, **kwargs):
@@ -62,8 +65,8 @@ class Model(object):
             kwargs = data
         return kwargs and db.insert(self._table, **kwargs)
 
-    def delete(self, uid):
-        where = "id=%i" % int(uid)
+    def delete(self, _id):
+        where = "id=%i" % int(_id)
         """"删除用户,如果不能删除状态设为 1"""
         if db.delete(self._table, where=where):
             return True

@@ -3,6 +3,7 @@
 import web
 from lib import yunyin, user, validate, cookie
 from lib.response import json
+"""通知"""
 
 NO_USER = 2
 SUCCESSS = 1

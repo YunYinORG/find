@@ -2,6 +2,7 @@
 # coding=utf-8
 from ucpass import templateSMS
 from json import loads
+from random import randint
 import config
 
 
@@ -16,16 +17,18 @@ def _sendSms(to, templateId, param):  # 发送短信
         return None
 
 
-def sendLogin(to, code):
+def sendLogin(to):
     """临时登录验证"""
+    code = str(randint(1000, 999999))
     param = "%s,3" % (code)
-    return _sendSms(to, config.SMS_LOGIN, param)
+    return _sendSms(to, config.SMS_LOGIN, param) and code
 
 
-def sendBind(to, code):
+def sendBind(to):
     """绑定手机"""
+    code = str(randint(1000, 999999))
     param = "%s,3" % (code)
-    return _sendSms(to, config.SMS_BIND, param)
+    return _sendSms(to, config.SMS_BIND, param) and code
 
 
 def sendNotify(to, finder, finder_phone, site='http://find.yunyin.org', thing="校园卡"):
