@@ -17,7 +17,8 @@ create table record
    lost_id           int not null,
    time              timestamp not null default CURRENT_TIMESTAMP,
    status            tinyint not null default 0,
-   token             char(16),
+   way               int,
+   token             char(32),
    primary key (id)
 );
 

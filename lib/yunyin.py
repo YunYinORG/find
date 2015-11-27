@@ -99,4 +99,4 @@ def bindPhone(phone):
     url = BASE_URL + 'card/phone'
     data = {'phone': phone, 'key': APIKEY}
     result = _post(url, data)
-    return result and (result['status'] == 1)
+    return result

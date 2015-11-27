@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # coding=utf-8
 import web
-from lib import yunyin, user, validate, cookie
+from lib import sms, yunyin, user, validate, cookie
 from lib.response import json
+import lib.url as url
+from model.user import userModel
+from model.record import recordModel
 """通知"""
 
 NO_USER = 2
@@ -10,6 +13,7 @@ SUCCESSS = 1
 UNLOGIN = 0
 RETRY = -1
 NO_PHONE = -2
+RECORD_SMS = 1
 
 
 class notify:
@@ -18,9 +22,10 @@ class notify:
         """验证通知"""
         info = web.input(number=None, name=None)
         school = validate.school(info['number'])
+        finder = user.getUser()
         if info.name == None or info.number == None:  # 输入无效
             return json(-5, "数据无效")
-        elif not user.getUser():      # 未登录
+        elif not finder:      # 未登录
             return json(UNLOGIN, "未登录")
         elif not school > 0:  # 学号格式错误
             return json(RETRY, "学号格式不对")
@@ -40,13 +45,43 @@ class notify:
                 return self.next(info, school, 0)
             else:  # 验证成功
                 lost = data['info']
+                db_yy_user = userModel.find('id,phone', yyid=lost['id'])
 
-                if lost['phone'] and self.phoneNotify(lost['phone']):
-                    return json(SUCCESSS, "通知成功")
-                elif lost['email']:  # 发送邮件
+                if lost['phone']:
+                    # 更新本地数据库
+                    if db_yy_user and db_yy_user.phone == lost['phone']:  # 手机号一致
+                        lost_id = db_yy_user.id
+                    else:  # 手机号不一致
+                        db_phone_user = userModel.find('id,yyid', phone=lost['phone'])
 
-                    return self.next(info, school, 1)
-                else:  # 联系方式
+                        if db_yy_user and not db_phone_user:  # 此云印账号已经存在数据库,但是手机号未同步
+                            lost_id = db_yy_user.id
+                            userModel.save(lost_id, phone=lost['phone'])  # 更新手机
+                        elif db_phone_user and not db_yy_user:  # 手机也不存在,但此云印在此处不存在
+                            if not db_phone_user.yyid:  # 手机号为临时账号
+                                lost_id = db_phone_user.id
+                                userModel.save(lost_id, yyid=lost['id'], number=lost['number'], name=lost['name'], school=lost['sch_id'], type=1)
+                            elif db_phone_user.yyid != lost['id']:  # 账号不一直在
+                                # 进入此处为逻辑错误
+                                # todo 删除原手机，新建账号
+                                return json(-5, "此学号在系统中数据异常")
+                        elif db_phone_user and db_yy_user:  # 两个账号同时存在
+                            # todo 合并账号
+                            pass
+                        else:  # 此账号在此处不存在,手机也不存在
+                            lost_id = userModel.add(yyid=lost['id'], number=lost['number'], name=lost['name'], school=lost['sch_id'], type=1)
+
+                    # 次数检查
+                    # todo
+                    # 准备发送短信
+                    token, long_url = url.create(finder['id'], lost_id)
+                    if sms.sendNotify(lost['phone'], finder['name'], phone, url.short(long_url)):  # 短信发送通知
+                        recordModel.add(lost_id=lost_id, find_id=finder['id'], way=RECORD_SMS, token=token)
+                        return json(SUCCESSS, "通知成功")
+                    else:  # 发送失败
+                        return self.next(info, school, 1)
+                else:  # 验证成功但无联系方式
+                        # 检查用户，创建
                     return 1
 
     def GET(self):

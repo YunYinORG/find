@@ -20,7 +20,7 @@ def getAuth(accountSid, timestamp):  # 生成授权信息
 
 def request(req, url, accountSid, timestamp, body):  # 生成HTTP报文
     req.add_header("Authorization", getAuth(accountSid, timestamp))
-    req.add_header("Accept", "application/json")
+    req.add_header("Accept", "application/json;charset=utf-8")
     req.add_header("Content-Type", "application/json;charset=utf-8")
     if body:
         req.add_header("Content-Length", len(body))
@@ -48,4 +48,5 @@ def templateSMS(accountSid, accountToken, appId, toNumbers, templateId, param):
     url = HOST + "/" + SOFTVER + "/Accounts/" + accountSid + "/Messages/templateSMS?sig=" + signature
     body = '{"templateSMS":{ "appId":"%s","to":"%s","templateId":"%s","param":"%s"}}' % (appId, toNumbers, templateId, param)
     req = urllib2.Request(url)
+    body = body.encode('utf-8')
     return request(req, url, accountSid, timestamp, body)
