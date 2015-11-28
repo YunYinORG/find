@@ -58,7 +58,7 @@ class code:
                 name = data['name']
                 dbuser = userModel.find('id,yyid,name', phone=data['phone'])
                 if not dbuser:  # 数据库中不存在
-                    uid = userModel.add(name=name, phone=data['phone'])
+                    uid = userModel.add(name=name, phone=data['phone'], type=0)
                     user.saveUser(uid, name, data['phone'])
                 elif not dbuser.yyid:  # 数据库中的临时用户
                     userModel.save(dbuser.id, name=name)

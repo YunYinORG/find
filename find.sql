@@ -12,9 +12,9 @@ drop table if exists user;
 /*==============================================================*/
 create table record
 (
-   id                int not null auto_increment,
-   find_id           int not null,
-   lost_id           int not null,
+   id                bigint not null auto_increment,
+   find_id           bigint not null,
+   lost_id           bigint not null,
    time              timestamp not null default CURRENT_TIMESTAMP,
    status            tinyint not null default 0,
    way               int,
@@ -28,9 +28,9 @@ create table record
 /*==============================================================*/
 create table user
 (
-   id                int not null auto_increment,
+   id                bigint not null auto_increment,
    yyid              bigint,
-   number            char(10) not null,
+   number            char(10),
    school            tinyint,
    name              varchar(10) not null,
    phone             char(16),

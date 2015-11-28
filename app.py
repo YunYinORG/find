@@ -21,7 +21,7 @@ else:  # wsgi模式启动
     application = app.wsgifunc()
 
 
-class test(object):
+class test:
 
     def GET(self):
         return "it works"

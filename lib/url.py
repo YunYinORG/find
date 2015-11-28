@@ -12,7 +12,7 @@ def create(find_id, lost_id):
     head = str(lost_id) + hex(int(find_id))[1:]
     s = uuid.uuid1().__str__().replace('-', '')
     token = head + s[0:(32 - len(head))]
-    return token, BASE_URL + token
+    return token, BASE_URL + '?t=' + token
 
 
 def short(url):

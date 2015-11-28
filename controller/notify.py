@@ -4,7 +4,7 @@ import web
 from lib import sms, yunyin, user, validate, cookie
 from lib.response import json
 import lib.url as url
-from model.user import userModel
+from model.user import userModel, merge
 from model.record import recordModel
 """通知"""
 
@@ -13,6 +13,7 @@ SUCCESSS = 1
 UNLOGIN = 0
 RETRY = -1
 NO_PHONE = -2
+LIMITED = -3
 RECORD_SMS = 1
 
 
@@ -32,9 +33,12 @@ class notify:
         elif not validate.name(info['name']):  # 姓名错误
             return json(RETRY, "请输入正确姓名")
         else:  # 输入正常
+
             phone = user.getPhone()
             if not phone:
                 return json(NO_PHONE, "需要验证手机后使用")
+            elif not notify.checkTimes(finder['id'], finder['yyid']):
+                return json(LIMITED, "此账号在超过大尝试次数[存在未确认的记录]")
 
             data = yunyin.verify(info['number'], info['name'], school)
             if not data:  # 查询失败
@@ -49,6 +53,7 @@ class notify:
 
                 if lost['phone']:
                     # 更新本地数据库
+                    # 此处逻辑应该转移
                     if db_yy_user and db_yy_user.phone == lost['phone']:  # 手机号一致
                         lost_id = db_yy_user.id
                     else:  # 手机号不一致
@@ -57,7 +62,7 @@ class notify:
                         if db_yy_user and not db_phone_user:  # 此云印账号已经存在数据库,但是手机号未同步
                             lost_id = db_yy_user.id
                             userModel.save(lost_id, phone=lost['phone'])  # 更新手机
-                        elif db_phone_user and not db_yy_user:  # 手机也不存在,但此云印在此处不存在
+                        elif db_phone_user and not db_yy_user:  # 手机存在,但此云印在此处不存在
                             if not db_phone_user.yyid:  # 手机号为临时账号
                                 lost_id = db_phone_user.id
                                 userModel.save(lost_id, yyid=lost['id'], number=lost['number'], name=lost['name'], school=lost['sch_id'], type=1)
@@ -67,12 +72,17 @@ class notify:
                                 return json(-5, "此学号在系统中数据异常")
                         elif db_phone_user and db_yy_user:  # 两个账号同时存在
                             # todo 合并账号
-                            pass
+                            # 未考虑一号两处绑定的情况，正常情况不会出现
+                            lost_id = merge(db_phone_user.id, db_yy_user.id)
                         else:  # 此账号在此处不存在,手机也不存在
                             lost_id = userModel.add(yyid=lost['id'], number=lost['number'], name=lost['name'], school=lost['sch_id'], type=1)
 
                     # 次数检查
+                    times = recordModel.count(lost_id=lost_id, status=0)
+                    if times >= 3:  # 超过最大次数
+                        return json(LIMITED, '失主有超过三次记录未确认，为了防止骚扰，以禁止发送')
                     # todo
+
                     # 准备发送短信
                     token, long_url = url.create(finder['id'], lost_id)
                     if sms.sendNotify(lost['phone'], finder['name'], phone, url.short(long_url)):  # 短信发送通知
@@ -81,8 +91,10 @@ class notify:
                     else:  # 发送失败
                         return self.next(info, school, 1)
                 else:  # 验证成功但无联系方式
-                        # 检查用户，创建
-                    return 1
+                    # 检查用户，
+                    if not db_yy_user:  # 创建用户
+                        userModel.add(yyid=lost['id'], name=lost['name'], school=lost['sch_id'], type=1)
+                    return self.next(info, school, 1)
 
     def GET(self):
         return json(0, 'only post allowed')
@@ -92,8 +104,18 @@ class notify:
         cookie.set('b', data)
         return json(NO_USER, school)
 
+    @staticmethod
+    def checkTimes(uid, userType):
+        times = recordModel.count(find_id=int(uid), status=0)
+        if userType == 1:
+            return times < 3
+        else:
+            return times < 1
+
 
 class broadcast:
+
+    """临时账号创建type=-1的账号"""
 
     def POST(self):
         """发送广播"""
