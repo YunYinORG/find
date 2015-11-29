@@ -21,7 +21,8 @@ def _checkPhone(uid, phone):
 def saveUser(uid, name, phone=None, yyid=None):
     """保存用户信息"""
     user = {'id': uid, 'name': name, 'yyid': yyid, 'call': phone}
-    return cookie.set('u', user)
+    cookie.set('u', user)
+    return user
 
 
 def getUser():
@@ -42,7 +43,7 @@ def getUser():
                 if phone_user:  # 检查手机是否使用过
                     if not phone_user.yyid:  # 临时账号
                         uid = phone_user.id  # 更新临时账号
-                        userModel.save(uid, name=yyuser['name'], number=yyuser['number'], school=yyuser['sch_id'], type=1)
+                        userModel.save(uid, yyid=yyuser['id'], name=yyuser['name'], number=yyuser['number'], school=yyuser['sch_id'], type=1)
                     else:  # 绑定过其他账号，账号不一致...
                         # 异常情况
                         return False
@@ -53,8 +54,7 @@ def getUser():
                 userModel.save(uid, yyid=yyid, phone=phone, name=yyuser['name'], type=1)
             else:
                 uid, phone = user.id, user.phone
-            saveUser(uid, yyuser['name'], phone, yyid)
-            return yyuser
+            return saveUser(uid, yyuser['name'], phone, yyid)
 
 
 def getName():

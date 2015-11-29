@@ -37,7 +37,7 @@ def _post(url, data=None):
             h = {'Cookie': 'token=%s' % (token)}
             req = urllib2.Request(url, post_data, headers=h)
         else:
-            req = urllib2.Request(url, data)
+            req = urllib2.Request(url, post_data)
     try:
         response = urllib2.urlopen(req)
         result = response.read()

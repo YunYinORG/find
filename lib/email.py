@@ -14,10 +14,3 @@
 #     subject = '测试邮件'
 #     headers = {'Content-Type': 'text/html;charset=utf-8'}
 #     return web.sendmail(config.MAIL_USER, to, subject, content, headers=headers)
-
-def test(data):
-    return data and 1
-
-# print test('Hah')
-tex = u'{"name": "\u5218\u672a\u6765", "yyid": 12}\x00\x00\x00\x00\x00'
-print len(tex)

@@ -2,7 +2,7 @@
 # coding=utf-8
 import web
 import lib.user as user
-from model.record import recordModel
+from model import *
 """记录查看管理页"""
 
 
@@ -32,5 +32,15 @@ class view:
     """免登录查看单记录查看页"""
 
     def GET(self):
-        """记录查看，参数token"""
-        return web.input(token=None).token
+        """免登录记录查看，参数token"""
+        token = web.input(t=None).t
+        if not token:
+            return "无限查看"
+
+        record = recordModel.find(token=token)
+        if not record:
+            return "访问信息无效"
+        else:
+            finder = userModel.find(record.find_id, 'id,name,phone')
+            html = web.template.frender('templates/viewTemp.html')
+            return html(record, finder)
