@@ -3,6 +3,7 @@
 import web
 import lib.user as user
 from model import *
+from config import SCHOOL
 """记录查看管理页"""
 
 
@@ -37,10 +38,13 @@ class view:
         if not token:
             return "无限查看"
 
-        record = recordModel.find(token=token)
+        record = recordModel.find('id,lost_id,find_id,time', token=token)
         if not record:
-            return "访问信息无效"
+            return "此临时页面已关闭"
         else:
             finder = userModel.find(record.find_id, 'id,name,phone')
+           
+            lost = userModel.find(record.lost_id, 'id,name,number,school')
+            lost.school = SCHOOL[lost.school]
             html = web.template.frender('templates/viewTemp.html')
-            return html(record, finder)
+            return html(record, finder, lost)

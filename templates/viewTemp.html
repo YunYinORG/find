@@ -1,24 +1,47 @@
-$def with (record,finder)
+$def with (record,finder,lost)
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
-  	<title>云印南天—招领服务</title>
+  	<title>招领服务—详情查看</title>
+  	<META NAME="ROBOTS" CONTENT="NOINDEX">
   	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
   	<link rel="stylesheet" type="text/css" href="/static/css/card.css">
+  	<style type="text/css">
+  	.findinfo,.lostinfo{width: 90%;border: 1px solid lightblue;text-align: center;margin: 1px auto 10px auto;}
+  	.list{display: inline-block;width:20em;min-width: 40%;text-align: left;}
+  	.item{color: lightblue; text-align: right;font-weight: 100;width: 40%;font-size: 1.5em;}
+  	.item::after{content: ':';}
+  	.detail{color:#FFF;text-align: left;font-weight: 900;width: 60%;padding-left: 1em;font-size: 2em;text-decoration: underline;}
+  	.warn{font-size: 1.2em;color: red;}
+  	</style>
 </head>
-<div>
-	时间：$record.time
-</div>
-<div>
-	通知人:$finder.name
-</div>
-<div>
-	联系方式:$finder.phone
-</div>
-<div>
-	状态:$record.status
-</div>
 <body>
+<h1>招领详情[$record.id]</h1>
+<p class="warn">此页是非公开临时页面,包含敏感信息,请<strong>勿</strong>分享转发此页</p>
+<p>登录请前往<a href="http://api.yunyin.org">api.yunyin.org</a></p>
+<div class="lostinfo">
+	<h3>丢失信息</h3>
+	<div class="list"><span class="item">姓名</span> <span class="detail">$lost.name</span></div>
+	<div class="list"><span class="item">学校</span> <span class="detail">$lost.school</span></div>
+	<div class="list"><span class="item">内容</span> <span class="detail">校园卡</span></div>
+	<div class="list"><span class="item">学号</span> <span class="detail">$lost.number</span></div>
+</div>
+<div class="findinfo">
+<h3>招领详情</h3>
+<div class="list"><span class="item">雷锋</span><span class="detail">$finder.name</span></div>
+<div class="list"><span class="item">手机</span><span class="detail"><a href="tel:$finder.phone">$finder.phone</a></span></div>
+<div class="list"><span class="item">时间</span><span class="detail">$record.time.strftime('%m月%d日%H:%M')</span></div>
+<div class="list"><span class="item">状态</span><span class="detail">待认领</span>(请登录后<a href=""><strong>感谢</strong></a>或<a href=""><strong>举报</strong></a>)</div>
+</div>
+<div class="tips">
+	<p>如果招领信息属实，请尽快联系“雷锋同志”认领，并确认感谢(以免影响“雷锋”继续行善)</p>
+<p>如果此内容为虚假的骚扰内容，您可立即用此学号登录举报，系统将会封禁“假雷锋”</p>
+<P>如果您觉得此内容会骚扰到您，您可选择关闭此功能，任何人将无法通过此处通知到您</P>
+</div>
+</div>
+<footer><hr/>
+<ul><li><a target="_blank" href="http://www.yunyin.org/">©云印南天YunYin.ORG</a></li><li><a target="_blank" rel="nofollow" href="https://github.com/YunYinORG/">云印团队开源项目</a></li>
+<li><a href="mailto:feedback@yunyin.org">反馈或帮助</a></li></ul></footer>
 </body>
 </html>
