@@ -51,38 +51,37 @@ class notify:
         else:  # 验证成功
             lost = data['info']
 
-        if not lost['phone']:  # 验证成功，但无手机号
-            if not db_yy_user:  # 无本地账户，创建用户
-                userModel.add(yyid=lost['id'], name=lost['name'], school=lost['sch_id'], type=1)
-            return self.next(info, school, 1)
-        elif phone == lost['phone']:  # 寻找者与失主同号，自己测试
+        # 判断是否是自己的账号
+        if phone == lost['phone']:
             return json(-5, "请不要用自己的账号测试！")
-        else:  # 有手机号
-            # 更新本地数据库
-            lost_id = notify.sync(lost)
-            if not lost_id:
-                return json(-5, "失主学号在系统中数据异常")
 
-            # 失主状态检查
-            if not notify.checkLost(lost_id):
-                return json(LIMITED, '失主未确认记录过多，或者设置了防骚扰，禁止发送通知')
+        # 更新本地数据库
+        lost_id = notify.sync(lost)
+        if not lost_id:
+            return json(-5, "失主学号在系统中数据异常")
+        elif not lost['phone']:  # 无手机号
+            return self.next(info, school, lost_id)
 
-            # 发送短信
-            token, long_url = url.create(finder['id'], lost_id)
-            if sms.sendNotify(lost['phone'], finder['name'], phone, url.short(long_url)):  # 短信发送通知
-                recordModel.add(lost_id=lost_id, find_id=finder['id'], way=RECORD_SMS, token=token)
-                return json(SUCCESSS, "通知成功")
-            else:  # 发送失败
-                return self.next(info, school, 1)
+        # 失主状态检查
+        if not notify.checkLost(lost_id):
+            return json(LIMITED, '失主未确认记录过多，或者设置了防骚扰，禁止发送通知')
+
+        # 发送短信
+        token, long_url = url.create(finder['id'], lost_id)
+        if sms.sendNotify(lost['phone'], finder['name'], phone, url.short(long_url)):  # 短信发送通知
+            recordModel.add(lost_id=lost_id, find_id=finder['id'], way=RECORD_SMS, token=token)
+            return json(SUCCESSS, "通知成功")
+        else:  # 发送失败,转到下一步
+            return self.next(info, school, lost_id)
 
     def GET(self):
         return json(0, 'only post allowed')
 
-    def next(self, info, school, is_yunyin_user=0):
+    def next(self, info, school, lost_id=0):
         """无手机号转入下一步"""
-        data = {'name': info['name'], 'card': info['number'], 'sch': school, 'in': is_yunyin_user}
+        data = {'name': info['name'], 'card': info['number'], 'sch': school, 'id': lost_id}
         cookie.set('b', data)
-        return json(NO_USER, is_yunyin_user and school)
+        return json(NO_USER, lost_id and school)
 
     @staticmethod
     def checkFind(uid, userType):
@@ -93,7 +92,7 @@ class notify:
         elif finder.status < 1:  # 此账号已封禁
             return False
         # 检查未找回记录
-        times = recordModel.count(find_id=int(uid), status=0)
+        times = recordModel.count(find_id=uid, status=0)
         if userType:
             return times < 3
         else:
@@ -109,15 +108,18 @@ class notify:
         else:
             school = validate.school(data['number'])
             if school > 0:
-                return True, 1
+                return True, school
             else:  # 学号格式错误
                 return RETRY, "学号格式不对"
 
     @staticmethod
     def sync(lost_user_in_yy):
         """同步云印账户和本地账户"""
-        db_yy_user = userModel.find('id,phone', yyid=lost_user_in_yy['id'])
-        if db_yy_user and db_yy_user.phone == lost_user_in_yy['phone']:  # 手机号一致
+        db_yy_user = userModel.find('id,yyid,phone,type', number=lost_user_in_yy['number'], school=lost_user_in_yy['sch_id'])
+        if db_yy_user and not db_yy_user.yyid:  # 临时找回账号-1状态
+            lost_id = db_yy_user.uid
+            userModel.save(lost_id, phone=phone, type=1)
+        elif db_phone_user and db_yy_user.phone == lost_user_in_yy['phone']:  # 手机号一致
             lost_id = db_yy_user.id
         else:  # 手机号不一致
             db_phone_user = userModel.find('id,yyid', phone=lost_user_in_yy['phone'])
@@ -129,7 +131,7 @@ class notify:
                     lost_id = db_phone_user.id
                     userModel.save(lost_id, yyid=lost_user_in_yy['id'], number=lost_user_in_yy['number'],
                                    name=lost_user_in_yy['name'], school=lost_user_in_yy['sch_id'], type=1)
-                elif db_phone_user.yyid != lost_user_in_yy['id']:  # 账号不一直在
+                elif db_phone_user.yyid != lost_user_in_yy['id']:  # 账号不一致
                     # 进入此处为逻辑错误
                     # todo 删除原手机，新建账号
                     return False
@@ -159,9 +161,38 @@ class broadcast:
 
     def POST(self):
         """发送广播"""
-        data = cookie.get('b')
-        if not data:
+        userInfo = cookie.get('b')
+
+        if not userInfo:
             return json(0, '验证信息无效')
+
+        school = userInfo['sch']
+
+        inputData = web.input(msg=None, school=None)
+        if userInfo['id'] > 0:
+            uid = userInfo['id']
+        elif inputData.school != school:
+            return json(LIMITED, '学校不匹配!')
+        else:  # 创建失主临时账号
+            uid = userModel.add(name=userInfo['name'], number=userInfo['card'], type=-1)
+
+        #判断学校
+        if school == 1:  # 南开
+            # nkbbs
+            pass
+        elif school == 2:  # 天大
+            # tjubbs
+            pass
+        elif school == 4:  # 河北工业大学
+            return json(0, "正在接入中")
+        elif school == 3:  # 商职
+            return json(0, "正在接入中")
         else:
-            cookie.delete('b')
-            return json(1, '发送成功')
+            return json(0, "学校暂不支持")
+
+        # weibo
+
+        # 更新数据库
+
+        cookie.delete('b')
+        return json(1, '发送成功')
