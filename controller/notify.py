@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 import web
+import config
 from lib import sms, yunyin, user, validate, cookie
 from lib.response import json
 import lib.url as url
@@ -14,11 +15,9 @@ UNLOGIN = 0
 RETRY = -1
 NO_PHONE = -2
 LIMITED = -3
-RECORD_SMS = 1
 
 
 class notify:
-    # TODO 屏蔽和账号封禁检查
 
     def POST(self):
         """验证通知"""
@@ -69,7 +68,7 @@ class notify:
         # 发送短信
         token, long_url = url.create(finder['id'], lost_id)
         if sms.sendNotify(lost['phone'], finder['name'], phone, url.short(long_url)):  # 短信发送通知
-            recordModel.add(lost_id=lost_id, find_id=finder['id'], way=RECORD_SMS, token=token)
+            recordModel.add(lost_id=lost_id, find_id=finder['id'], way=config.NOTIFY_SMS, token=token)
             return json(SUCCESSS, "通知成功")
         else:  # 发送失败,转到下一步
             return self.next(info, school, lost_id)
@@ -162,12 +161,16 @@ class broadcast:
     def POST(self):
         """发送广播"""
         userInfo = cookie.get('b')
-
         if not userInfo:
             return json(0, '验证信息无效')
 
-        school = userInfo['sch']
+        finder = user.getUser()
+        if not user:
+            return json(UNLOGIN, '未登录')
+        else:
+            find_id = finder['id']
 
+        school = userInfo['sch']
         inputData = web.input(msg=None, school=None)
         if userInfo['id'] > 0:
             uid = userInfo['id']
@@ -176,7 +179,8 @@ class broadcast:
         else:  # 创建失主临时账号
             uid = userModel.add(name=userInfo['name'], number=userInfo['card'], type=-1)
 
-        #判断学校
+        token, way = '', 0x0
+        # 判断学校
         if school == 1:  # 南开
             # nkbbs
             pass
@@ -193,6 +197,6 @@ class broadcast:
         # weibo
 
         # 更新数据库
-
+        recordModel.add(lost_id=uid, find_id=find_id, way=way, token=token)
         cookie.delete('b')
         return json(1, '发送成功')

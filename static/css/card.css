@@ -41,6 +41,7 @@ footer li a{color:#ddd;text-decoration:none;display: inline-block;}
 .code:hover,.code:active,.code:focus{background:#1abc9c !important;color:#FFF !important; font-weight: inherit;border: 3px double #eee !important;}
 .auto{cursor: pointer;line-height: 1.8em;font-size: 1.5em; border:5px double #eee;background-color:#5ef;color:#FFF !important;border-radius: 3%;margin: 1% auto 1% auto;clear: both; width: auto !important;min-width: 30%;max-width: 80%}
 .close{margin-top: -3%;float: right;height: 1.2em;width: 1.2em;border: 3px solid;text-align: center;vertical-align: middle;border-radius: 50%;cursor: pointer;}
+.msg-box{border: 5px dotted #FFF;}
 #err-modal{display: none; color: #EEE;position: fixed;top: 6%;font-size: 2em;font-weight: bolder;
     padding: 3px; left: 10%;right: 10%;width: 80%;text-align: center;z-index: 10000;background: red;border-radius: 5px;border:3px solid transparent;}
 @media(max-width:980px){.how{margin:auto;border:dotted #ddd}
@@ -63,6 +64,9 @@ footer li a{color:#ddd;text-decoration:none;display: inline-block;}
 .to,label{display:none;}
 .auto{font-size:2.0em;line-height: 2.2em;margin: 1em auto 1em auto;}
 .input{font-size:2.0em;line-height: 2.2em;}
+.modal .input::-moz-placeholder{color:#DDD;font-size:0.6em}
+.modal .input::-webkit-input-placeholder{color:#DDD;font-size: 0.5em;line-height: 1.8em;}
+.modal .input:-ms-input-placeholder{color:#DDD;font-size: 0.5em}
 }
 @media(max-width:419px){
 .step{margin:1px auto;padding:1px;width:80%;max-width:90%}

@@ -41,7 +41,7 @@ $('#opne_phone_login').click(function(){
 	$('#phone-msg').html('非学生可使用手机号作为临时账号(<a href="http://api.yunyin.org" target="_blank">该校学生请使用云印校园账号登录</a>)，为了防止滥用和骚扰，只允许发送一次信息(直到确认找回)');
 	$('#user').show();
 });
-
+//验证通知
 $('#submit').click(function(){
 	var number,name;
 	if((number=getcard(true))&&(name=getName(true)))
@@ -74,6 +74,11 @@ $('#submit').click(function(){
 					break;
 
 				case 2://广播
+					school=result.message;
+					if (school>0){
+						$('#school-select').hide();
+					}
+					showModal('msg');
 					break;
 				default:
 					if (result['message'])
@@ -153,4 +158,27 @@ $('#submit-code').click(function(){
 		$('#submit-code').removeAttr('disabled');
 	});
 
+});
+
+//广播消息
+$('#submit-msg').click(function(){
+$(this).attr('disabled','disabled');
+var msg=$('#msg').val();
+	if(msg.length>16)
+	{
+		ModalErr('字数超过16个了！')
+		$('#msg').focus();
+		return false;
+	}
+	var data={'msg':msg};
+	var select=$('#sch')
+	if(select.css('display')!='none')
+	{
+		var school=select.val();
+		data['sch']=school;
+	}
+	$.post('/notify/broadcast',data,function(result){
+		alert(result);
+		$('#submit-msg').removeAttr('disabled');
+	});
 });

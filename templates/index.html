@@ -103,14 +103,23 @@ $else:
 	</div>
 </div>
 </div>
-
-<div id="msg-modal" class="modal" style="display:none">
+<div id="msg-modal" class="modal" style="display:none" >
 <div class="content"><div class="close">×</div>
-	<h2>不能直接发送短信</h2>
-	<p></p>
-	<div>
-	<textarea></textarea>
-	<button class="auto" id="submit-phone">验证</button>
+	<h2>没有找到失主手机</h2>
+	<p>虽然我们不能直接给TA发送短信，但是我们可以通过<strong>BBS私信</strong>(暂支持南开BBS私信)通知他，<strong>微博</strong>和<strong>校内论坛广播</strong>等方式传播消息。TA一样可以在这儿联系您。</p>
+	<div class="msg-box">
+	<div id="school-select">
+		<lable>失主所在学校</lable>
+	<select id="sch" class="input auto">
+		<option value="1">南开大学</option>
+		<option value="2">天津大学</option>
+		<option value="4">河北工业</option>
+	</select>
+	</div>
+	<p>附加必要信息(限16字符以内)</p>
+	<textarea id="msg" rows="2" class="input" maxlength="16" placeholder="如:“卡在二食堂一楼”,“联系保卫处23503580”"></textarea>
+	<p>请不要将此功能用于表白哦！一旦有骚扰举报终身小黑屋(●ˇ∀ˇ●)<br/>请放心，我们不会公开您的手机号和姓名等信息！</p>
+	<button class="auto" id="submit-msg">发送通知</button>
 	</div>
 </div>
 </div>
