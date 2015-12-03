@@ -118,7 +118,7 @@ class notify:
         if db_yy_user and not db_yy_user.yyid:  # 临时找回账号-1状态
             lost_id = db_yy_user.uid
             userModel.save(lost_id, phone=phone, type=1)
-        elif db_phone_user and db_yy_user.phone == lost_user_in_yy['phone']:  # 手机号一致
+        elif db_yy_user and db_yy_user.phone == lost_user_in_yy['phone']:  # 手机号一致
             lost_id = db_yy_user.id
         else:  # 手机号不一致
             db_phone_user = userModel.find('id,yyid', phone=lost_user_in_yy['phone'])
@@ -162,7 +162,7 @@ class broadcast:
         """发送广播"""
         userInfo = cookie.get('b')
         if not userInfo:
-            return json(0, '验证信息无效')
+            return json(RETRY, '验证信息无效')
 
         finder = user.getUser()
         if not user:
@@ -171,32 +171,35 @@ class broadcast:
             find_id = finder['id']
 
         school = userInfo['sch']
-        inputData = web.input(msg=None, school=None)
+        inputData = web.input(msg=None, sch=None)
         if userInfo['id'] > 0:
             uid = userInfo['id']
-        elif inputData.school != school:
-            return json(LIMITED, '学校不匹配!')
+        elif int(inputData['sch']) != school:
+            return json(RETRY, '学校不匹配!')
         else:  # 创建失主临时账号
             uid = userModel.add(name=userInfo['name'], number=userInfo['card'], type=-1)
 
-        token, way = '', 0x0
+        way =0x0
+        token, viewurl = url.create(find_id, uid)
         # 判断学校
         if school == 1:  # 南开
             # nkbbs
             pass
         elif school == 2:  # 天大
             # tjubbs
-            pass
+            from lib.bbs_tju import broadcast as tjubbs_broadcast
+            if tjubbs_broadcast(userInfo['card'], userInfo['name'], viewurl, inputData['msg']):
+                way=way|config.NOTIFY_BBS
         elif school == 4:  # 河北工业大学
-            return json(0, "正在接入中")
+            return json(LIMITED, "正在接入中")
         elif school == 3:  # 商职
-            return json(0, "正在接入中")
+            return json(LIMITED, "正在接入中")
         else:
-            return json(0, "学校暂不支持")
+            return json(LIMITED, "学校暂不支持")
 
         # weibo
 
         # 更新数据库
         recordModel.add(lost_id=uid, find_id=find_id, way=way, token=token)
         cookie.delete('b')
-        return json(1, '发送成功')
+        return json(SUCCESSS, '发送成功')

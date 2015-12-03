@@ -13,6 +13,7 @@ import web
 from controller import *
 
 web.config.debug = True
+web.DEBUG=True
 # 启动服务
 app = web.application(urls, globals())
 if __name__ == "__main__":  # python直接启动服务

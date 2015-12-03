@@ -28,10 +28,11 @@ function getName(focus)
 }
 function displayErr(msg){$('#err').html(msg);}
 function ModalErr(msg){ if (msg){$('#err-modal').html(msg).show(200);}else{$('#err-modal').html('').hide();}}
+function closeModal(){$('.modal').hide();$("#main").show();$('#err-modal').hide();};
 function showModal(name){$('#main').hide();$('.modal').hide();$('#'+name+'-modal').show()};
 $('#card').blur(function(){if($(this).val()&&getcard())displayErr('');});
 $('#name').blur(function(){if($(this).val()&&getName())displayErr('');});
-$('.close').click(function(){$('.modal').hide();$("#main").show();$('#err-modal').hide()});
+$('.close').click(function(){closeModal()});
 $('#err-modal').click(function(){$(this).hide(200)});
 $('.login').click(function(){showModal('login');});
 //临时注册
@@ -141,6 +142,7 @@ $('#submit-code').click(function(){
 	}
 	$(this).attr('disabled','disabled');
 	ModalErr('');
+					
 	$.post('/phone/code',{'code':code},function(result){
 		if(result.status==1)
 		{
@@ -162,7 +164,7 @@ $('#submit-code').click(function(){
 
 //广播消息
 $('#submit-msg').click(function(){
-$(this).attr('disabled','disabled');
+$(this).attr('disabled','disabled').text('正在发送...');
 var msg=$('#msg').val();
 	if(msg.length>16)
 	{
@@ -178,7 +180,30 @@ var msg=$('#msg').val();
 		data['sch']=school;
 	}
 	$.post('/notify/broadcast',data,function(result){
-		alert(result);
-		$('#submit-msg').removeAttr('disabled');
+		switch(result.status)
+			{
+				case 1://通知成功
+					closeModal();
+					$('#submit').text('已通知').attr('disabled','disabled');
+					$('input').attr('disabled','disabled');
+					$('#err').html("已经通知"+name+"["+number+"]");
+					break;
+				case -1://验证失败
+					ModalErr(result['message']);
+					$('#submit-msg').text('发送通知').removeAttr('disabled');
+					break;
+				case 0://未登录
+					showModal('login');
+					$('#submit-msg').removeAttr('disabled');
+					break;
+				default:
+					if (result['message'])
+					{
+						ModalErr(result['message']);
+					}
+					$('#submit').text('通知失主').removeAttr('disabled');
+					break;
+			}
+	
 	});
 });
