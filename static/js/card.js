@@ -186,7 +186,7 @@ var msg=$('#msg').val();
 					closeModal();
 					$('#submit').text('已通知').attr('disabled','disabled');
 					$('input').attr('disabled','disabled');
-					$('#err').html("已经通知"+name+"["+number+"]");
+					$('#err').html("广播发送成功");
 					break;
 				case -1://验证失败
 					ModalErr(result['message']);

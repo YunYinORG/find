@@ -65,7 +65,7 @@ class code:
                     user.saveUser(dbuser.id, name, data['phone'])
                 else:  # 数据库中存在的云印用户
                     name = dbuser.name
-                    user.saveUser(dbuser.id, name, data['phone'], yyid)
+                    user.saveUser(dbuser.id, name, data['phone'], dbuser.yyid)
                 return json(1, name)
             elif yunyin.bindPhone(data['phone']):  # 绑定手机
                 user.savePhone(data['phone'])

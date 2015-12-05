@@ -10,6 +10,7 @@ label{width:8%;color:#eee;font-size:1.1em;line-height:1.8em}
 .input::-moz-placeholder{color:#eee}
 .input::-webkit-input-placeholder{color:#eee}
 .input:-ms-input-placeholder{color:#eee}
+.input[disabled],.input[disabled]:hover, button[disabled], button[disabled]:hover{color: #eee;cursor: not-allowed;border-color: #bbb;background: #bbb;}
 .btn:active,.btn:hover,.input:focus{border:5px double #fff;background:#fefefe;color:#57c3ea;font-weight:bolder}
 .input:active,.input:hover{border-bottom:5px dotted;font-weight:bolder}
 .btn{padding:2px;width:80%;border:5px double #fff;color:#fff;cursor:pointer}
