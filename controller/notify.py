@@ -2,8 +2,10 @@
 # coding=utf-8
 import web
 import config
+import re
 from lib import sms, yunyin, user, validate, cookie
 from lib.response import json
+import lib.weibo as weibo
 import lib.url as url
 from model.user import userModel, merge
 from model.record import recordModel
@@ -171,15 +173,18 @@ class broadcast:
             find_id = finder['id']
 
         school = userInfo['sch']
-        inputData = web.input(msg=None, sch=None)
+        inputData = web.input(msg=None, sch=0)
         if userInfo['id'] > 0:
             uid = userInfo['id']
-        elif int(inputData['sch']) != school:
+        elif not (inputData['sch'] and int(inputData['sch']) == school):
             return json(RETRY, '学校不匹配!')
         else:  # 创建失主临时账号
             uid = userModel.add(name=userInfo['name'], number=userInfo['card'], type=-1)
 
-        way =0x0
+        # 输入过滤
+        msg = inputData['msg'] and re.sub(r'</?\w+[^>]*>', '', inputData['msg'])
+        msg = msg and msg[0:16]
+        way = 0x0
         token, viewurl = url.create(find_id, uid)
         # 判断学校
         if school == 1:  # 南开
@@ -188,8 +193,8 @@ class broadcast:
         elif school == 2:  # 天大
             # tjubbs
             from lib.bbs_tju import broadcast as tjubbs_broadcast
-            if tjubbs_broadcast(userInfo['card'], userInfo['name'], viewurl, inputData['msg']):
-                way=way|config.NOTIFY_BBS
+            if tjubbs_broadcast(userInfo['card'], userInfo['name'], viewurl, msg):
+                way = way | config.NOTIFY_BBS
         elif school == 4:  # 河北工业大学
             return json(LIMITED, "正在接入中")
         elif school == 3:  # 商职
@@ -197,9 +202,15 @@ class broadcast:
         else:
             return json(LIMITED, "学校暂不支持")
 
-        # weibo
+        # 发送微博
+        weibo_msg = weibo.format(school, userInfo['card'], userInfo['name'], msg)
+        if weibo.post(weibo_msg):
+            way = way | config.NOTIFY_WEIBO
 
-        # 更新数据库
-        recordModel.add(lost_id=uid, find_id=find_id, way=way, token=token)
-        cookie.delete('b')
-        return json(SUCCESSS, '发送成功')
+        if way:
+            # 更新数据库
+            recordModel.add(lost_id=uid, find_id=find_id, way=way, token=token)
+            cookie.delete('b')
+            return json(SUCCESSS, way)
+        else:
+            return json(RETRY, '发送出错!')
