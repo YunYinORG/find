@@ -67,22 +67,23 @@ class report:
         if not data.id or not data.status:
             return json(0, '信息不完整')
 
-        record = recordModel.find('status', id=data.id, lost_id=uid)
+        record = recordModel.find(data.id,'find_id,status', lost_id=uid)
         if not record:
-            return 0
+            return json(0, '记录已不存在')
         elif record.status != 0:
-            return -1
-        elif recordModel.save(record_id, status=data.status):
-            return 1
+            return json(0, '记录已经修改，如需要再次修改,请联系feedback@yunyin.org')
+        elif data.status==1:
+            #感谢
+            #发送感谢短信
+            recordModel.save(data.id, status=1)
+            return json(1,'已发送感谢')
+        elif data.status==-1:
+            #举报
+            userModel.save(record.find_id,status=-1)
+            recordModel.save(data.id, status=-1)
+            return json(1,'已举报')
         else:
-            return -2
-
-
-class thank:
-
-    def POST(self):
-        """感谢,参数ID"""
-        return web.input(id=None).id
+            return json(0,'状态更新失败')
 
 
 class view:

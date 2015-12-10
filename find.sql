@@ -35,7 +35,7 @@ create table user
    name              varchar(10) not null,
    phone             char(16),
    type              tinyint,#标记用户类型0临时用户，-1无账号用户(失主)，云印用户
-   blocked				tinyint	not null default 0,
+   blocked				tinyint	not null default 0,#关闭通知
    status            tinyint default 1,
    primary key (id),
    CONSTRAINT UNIQUE_CARD UNIQUE (school,number),#卡号唯一

@@ -1,4 +1,4 @@
-$def with (record,finder,lost)
+$def with (recordInfo,finder,lost)
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -7,11 +7,13 @@ $def with (record,finder,lost)
   	<META NAME="ROBOTS" CONTENT="NOINDEX">
   	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
   	<link rel="stylesheet" type="text/css" href="/static/css/card.css">
+    <style type="text/css">#err{width: 100%;}</style>
 </head>
 <body>
-<h1>招领详情[$record.id]</h1>
-<span><button class="auto success">确认感谢</button></span>
-<span><button class="auto danger">举报骚扰</button></span>
+<h1>招领详情[$recordInfo.id] <small><a href="/record/"><u>返回列表</u></a></small></h1>
+<div id="err" class="err"></div>
+<span><button id="thank" data-id="$recordInfo.id" class="auto success">确认感谢</button></span>
+<span><button id="report" data-id="$recordInfo.id" class="auto danger">举报骚扰</button></span>
 <div class="lostinfo">
 	<h3>丢失信息</h3>
 	<div class="list"><span class="item">姓名</span> <span class="detail">$lost.name</span></div>
@@ -23,15 +25,15 @@ $def with (record,finder,lost)
 <h3>招领详情</h3>
 <div class="list"><span class="item">雷锋</span><span class="detail">$finder.name</span></div>
 <div class="list"><span class="item">手机</span><span class="detail"><a href="tel:$finder.phone">$finder.phone</a></span></div>
-<div class="list"><span class="item">时间</span><span class="detail">$record.time.strftime('%m月%d日%H:%M')</span></div>
+<div class="list"><span class="item">时间</span><span class="detail">$recordInfo.time.strftime('%m月%d日%H:%M')</span></div>
 <div class="list"><span class="item">状态</span><span class="detail">
-$if record.status > 0:
+$if recordInfo.status > 0:
   已经感谢
-$elif record.status < 0:
+$elif recordInfo.status < 0:
   已经举报
 $else:
   等待确认
-
+</span>
 </div>
 <div class="tips">
 	<p>如果招领信息属实，请尽快联系“雷锋同志”认领，并确认感谢(以免影响“雷锋”继续行善)</p>
@@ -43,4 +45,32 @@ $else:
 <ul><li><a target="_blank" href="http://www.yunyin.org/">©云印南天YunYin.ORG</a></li><li><a target="_blank" rel="nofollow" href="https://github.com/YunYinORG/">云印团队开源项目</a></li>
 <li><a href="mailto:feedback@yunyin.org">反馈或帮助</a></li></ul></footer>
 </body>
+<script type="text/javascript" src="/static/jquery/2.1.1/jquery.min.js?2"></script>
+<script>
+function report(data)
+{
+  $$.post('/record/report',data,function(result)
+  {
+    if(result.status)
+    {
+      displayMsg(result.message+"[3s后跳转]")
+      window.setTimeout(function(){location.href='/record/'},3000);
+    }else{
+      displayMsg(result.message)
+    }
+  })
+}
+function displayMsg(msg){$$('#err').html(msg).show();window.setTimeout(function(){$$('#err').html(msg).hide(500)},1500);}
+$$('#report').click(function(argument) {
+  if(confirm("举报后,对方将被列入恶意使用者名单，永久关闭其招领功能。举报恶意骚扰？"))
+  {
+     data={'id':$$(this).data('id'),status:-1}
+     report(data);
+  }
+})
+$$('#thank').click(function(){
+   data={'id':$$(this).data('id'),status:1}
+  report(data);
+})
+</script>
 </html>
