@@ -1,0 +1,72 @@
+$def with (lostInfo,findInfo)
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+  	<title>云印南天—招领服务记录</title>
+  	<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+  	<style type="text/css">
+  	html{overflow-x:hidden;height:100%}
+body,html{margin:0;padding:0;width:100%;text-align:center}
+body{position:relative;min-height:98%;height: 100%;background-color:#FFF;color:#57c3ea}
+a{color: inherit;text-decoration: none;}
+li{list-style:none;font-size:1.2em}
+footer li{display:inline;color:#aaa}
+footer li a{color:#aaa;text-decoration:none;display: inline-block;}
+hr{border:1px double #dedede}
+	.find,.lost{
+		background-color: #57c3ea;
+		color: #FFF;
+		margin: 5px;
+		padding: 5px;
+		border: 3px solid;
+		border-radius: 6px;
+	}
+	.item{
+		line-height: 1.8em;
+		margin: 0.2em auto 0.8em auto;
+	}
+	.item>span{
+		font-size: larger;font-weight: 900;
+	}
+  	</style>
+</head>
+<body>
+<div id="main">
+<h1>我的记录</h1>
+<div class="lost">
+<h2>丢失记录</h2>
+$if not lostInfo:
+	<div class="item">还没有丢失过哦≧ω≦</div>
+$else:
+	$for l in lostInfo:
+		<div class="item">[#$l.id]<span>$l.finder<a href="tel:$l.phone">($l.phone)</a></span>于<span>$l.time.strftime('%m月%d日%H:%M')</span>捡到了我的校园卡,系统通过<span>$l.way</span>联系我。<span>	
+		$if l.status > 0:
+			已经感谢~
+		$elif l.status < 0:
+			已举报了！
+		$else:
+			<a href="/record/detail?id=$l.id"><u>感谢或举报</u></a>
+		</span></div>
+
+</div>
+<div class="find">
+<h2>招领记录</h2>
+$if not findInfo:
+	<div class="item">没有捡到过卡~</div>
+$else:
+	$for f in findInfo:
+		<div class="item">[#$f.id]我捡到了<span>$f.loster<a>($f.card)</a></span>的<span>校园卡</span>于<span>$f.time.strftime('%m月%d日%H:%M')</span>,系统通过<span>$f.way</span>通知了他,<span>
+		$if f.status > 0:
+			收到感谢:-)
+		$elif f.status < 0:
+			被举报了 :-(
+		$else:
+			等待确认中!
+		</span></div>
+
+</div>
+</div>
+<footer><hr/>
+<ul><li><a target="_blank" href="http://www.yunyin.org/">©云印南天</a></li>|<li><a target="_blank" rel="nofollow" href="https://github.com/YunYinORG/">开源项目</a></li></ul></footer>
+</html>

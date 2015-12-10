@@ -26,7 +26,7 @@ li{list-style:none;font-size:1.2em}
 .step,h3>a{color:#57c3ea}
 h3>a{text-decoration:none}
 .to{display:inline-block;width:0;height:0;border-top:40px solid transparent;border-bottom:40px solid transparent;border-left:60px solid #eee;vertical-align:middle;font-size:0;line-height:0}
-footer li{display:inline;padding:10px;color:#ddd}
+footer li{display:inline;color:#ddd}
 footer li a{color:#ddd;text-decoration:none;display: inline-block;}
 .err{position:absolute;margin:auto;padding:0;width:90%;background-color:#cf00f3;font-size:1.2em}
 .modal{position:absolute;width: 100%;;min-height:100%; z-index:9000;background-color:rgba(0,0,0,.5);transition:opacity .3s ease}
@@ -87,3 +87,11 @@ label{font-size: 1.5em;line-height: 1.8em;}
 .btn{margin:4% auto 1% auto}
 .info{clear: both;}
 }
+.findinfo,.lostinfo{width: 90%;border: 1px solid lightblue;text-align: center;margin: 1px auto 10px auto;}
+.list{display: inline-block;width:20em;min-width: 40%;text-align: left;}
+.item{color: lightblue; text-align: right;font-weight: 100;width: 40%;font-size: 1.5em;}
+.item::after{content: ':';}
+.detail{color:#FFF;text-align: left;font-weight: 900;width: 60%;padding-left: 1em;font-size: 2em;text-decoration: underline;}
+.warn{font-size: 1.2em;color: red;}
+.success{border-color: green;}
+.danger{border-color: red;}
