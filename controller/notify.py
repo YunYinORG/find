@@ -5,7 +5,7 @@ import config
 import re
 from lib import sms, yunyin, user, validate, cookie
 from lib.response import json
-import lib.weibo as weibo
+import lib.weibo_cookie as weibo
 import lib.url as url
 from model.user import userModel, merge
 from model.record import recordModel

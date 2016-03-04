@@ -25,11 +25,12 @@ YUNYIN_KEY = "yunyincard"
 YUNYIN_API = "http://api.yunyin.org/"
 
 #微博接口
+WEIBO_COOKIE="weibo.cn cookie string"
 WEIBO_KEY=2681865267
-WEIBO_SECRET='f92c633f332d26009bc71c6bb269683e'
-WEIBO_CALLBACK='http://2.newfuturepy.sinaapp.com/weibo/callback'
-WEIBO_ACCOUNT='xxxxxx'
-WEIBO_PWD='xxxxxx'
+# WEIBO_SECRET='f92c633f332d26009bc71c6bb269683e'
+# WEIBO_CALLBACK='http://2.newfuturepy.sinaapp.com/weibo/callback'
+# WEIBO_ACCOUNT='xxxxxx'
+# WEIBO_PWD='xxxxxx'
 
 
 # 邮件
