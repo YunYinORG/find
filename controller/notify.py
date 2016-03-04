@@ -179,7 +179,7 @@ class broadcast:
         elif not (inputData['sch'] and int(inputData['sch']) == school):
             return json(RETRY, '学校不匹配!')
         else:  # 创建失主临时账号
-            uid = userModel.add(name=userInfo['name'], number=userInfo['card'], type=-1)
+            uid = userModel.add(name=userInfo['name'], number=userInfo['card'],sch_id=school, type=-1)
 
         # 输入过滤
         msg = inputData['msg'] and re.sub(r'</?\w+[^>]*>', '', inputData['msg'])
