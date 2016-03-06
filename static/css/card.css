@@ -89,9 +89,9 @@ label{font-size: 1.5em;line-height: 1.8em;}
 }
 .findinfo,.lostinfo{width: 90%;border: 1px solid lightblue;text-align: center;margin: 1px auto 10px auto;}
 .list{display: inline-block;width:20em;min-width: 40%;text-align: left;}
-.item{color: lightblue; text-align: right;font-weight: 100;width: 40%;font-size: 1.5em;}
+.item{color: lightblue; text-align: right;font-weight: 100;width: 40%;font-size: 1.3em;}
 .item::after{content: ':';}
-.detail{color:#FFF;text-align: left;font-weight: 900;width: 60%;padding-left: 1em;font-size: 2em;text-decoration: underline;}
+.detail{color:#FFF;text-align: left;line-height: 1.6em;font-weight: 900;width: 60%;padding-left: 1em;font-size: 1.5em;text-decoration: underline;}
 .warn{font-size: 1.2em;color: red;}
 .success{border-color: green;}
 .danger{border-color: red;}

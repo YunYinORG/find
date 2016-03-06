@@ -68,8 +68,14 @@ class notify:
             return json(LIMITED, '失主未确认记录过多，或者设置了防骚扰，禁止发送通知')
 
         # 发送短信
+        finder_school_info=userModel.find(finder['id'],'school')
+        if finder_school_info and finder_school_info.school :
+            finder_name=config.SCHOOL[finder_school_info.school]+'的'+finder['name']
+        else:
+            finder_name=finder['name']
+
         token, long_url = url.create(finder['id'], lost_id)
-        if sms.sendNotify(lost['phone'], finder['name'], phone, url.short(long_url)):  # 短信发送通知
+        if sms.sendNotify(lost['phone'],finder_name, phone, url.short(long_url)):  # 短信发送通知
             recordModel.add(lost_id=lost_id, find_id=finder['id'], way=config.NOTIFY_SMS, token=token)
             return json(SUCCESSS, "通知成功")
         else:  # 发送失败,转到下一步
@@ -94,7 +100,7 @@ class notify:
             return False
         # 检查未找回记录
         times = recordModel.count(find_id=uid, status=0)
-        if userType:
+        if userType>0:
             return times < 3
         else:
             return times < 1
@@ -179,7 +185,7 @@ class broadcast:
         elif not (inputData['sch'] and int(inputData['sch']) == school):
             return json(RETRY, '学校不匹配!')
         else:  # 创建失主临时账号
-            uid = userModel.add(name=userInfo['name'], number=userInfo['card'],sch_id=school, type=-1)
+            uid = userModel.add(name=userInfo['name'], number=userInfo['card'],school=school, type=-1)
 
         # 输入过滤
         msg = inputData['msg'] and re.sub(r'</?\w+[^>]*>', '', inputData['msg'])

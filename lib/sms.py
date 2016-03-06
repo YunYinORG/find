@@ -33,7 +33,7 @@ def sendBind(to):
 
 def sendNotify(to, finder, finder_phone, site='http://find.yunyin.org', thing="校园卡"):
     """发送通知"""
-    param = "%s,%s,%s,%s" % (thing, finder, finder_phone, site)
+    param = "%s,%s,%s,%s" % (thing, finder, finder_phone, site+' ')
     return _sendSms(to, config.SMS_NOTIFY, param)
 
 

@@ -1,4 +1,4 @@
-$def with (recordInfo,finder,lost)
+$def with (recordInfo,finder,lost,token=None)
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -10,12 +10,20 @@ $def with (recordInfo,finder,lost)
     <style type="text/css">#err{width: 100%;}</style>
 </head>
 <body>
-<h1>招领详情[$recordInfo.id] <small><a href="/record/"><u>返回列表</u></a></small></h1>
+$if token==None:
+  <h1>招领详情[$recordInfo.id]  <small><a href="/record/"><u>返回</u></a></small></h1>
+$else:
+  <h1>招领详情[$recordInfo.id]</h1>
+
 <div id="err" class="err"></div>
-<span><button id="thank" data-id="$recordInfo.id" class="auto success">确认感谢</button></span>
-<span><button id="report" data-id="$recordInfo.id" class="auto danger">举报骚扰</button></span>
+$if recordInfo.status==0:
+  <div id="set" data-id="$recordInfo.id" data-token="$token">
+  <span><button id="thank" data-id="$recordInfo.id" class="auto success">确认感谢</button></span>
+  <span><button id="report" data-id="$recordInfo.id" class="auto danger">举报骚扰</button></span>
+  </div>
+
 <div class="lostinfo">
-	<h3>丢失信息</h3>
+	<h3>失主信息</h3>
 	<div class="list"><span class="item">姓名</span> <span class="detail">$lost.name</span></div>
 	<div class="list"><span class="item">学校</span> <span class="detail">$lost.school</span></div>
 	<div class="list"><span class="item">内容</span> <span class="detail">校园卡</span></div>
@@ -25,21 +33,18 @@ $def with (recordInfo,finder,lost)
 <h3>招领详情</h3>
 <div class="list"><span class="item">雷锋</span><span class="detail">$finder.name</span></div>
 <div class="list"><span class="item">手机</span><span class="detail"><a href="tel:$finder.phone">$finder.phone</a></span></div>
-<div class="list"><span class="item">时间</span><span class="detail">$recordInfo.time.strftime('%m月%d日%H:%M')</span></div>
+<div class="list"><span class="item">时间</span><span class="detail">$recordInfo.time.strftime('%m-%d %H:%M')</span></div>
 <div class="list"><span class="item">状态</span><span class="detail">
-$if recordInfo.status > 0:
-  已经感谢
-$elif recordInfo.status < 0:
-  已经举报
-$else:
-  等待确认
+$if recordInfo.status > 0:已经感谢
+$elif recordInfo.status < 0:已经举报
+$else:等待确认
 </span>
 </div>
+  </div>
 <div class="tips">
 	<p>如果招领信息属实，请尽快联系“雷锋同志”认领，并确认感谢(以免影响“雷锋”继续行善)</p>
 <p>如果此内容为虚假的骚扰内容，您可立即用此学号登录举报，系统将会封禁“假雷锋”</p>
 <P>如果您觉得此内容会骚扰到您，您可选择关闭此功能，任何人将无法通过此处通知到您</P>
-</div>
 </div>
 <footer><hr/>
 <ul><li><a target="_blank" href="http://www.yunyin.org/">©云印南天YunYin.ORG</a></li><li><a target="_blank" rel="nofollow" href="https://github.com/YunYinORG/">云印团队开源项目</a></li>
@@ -47,14 +52,17 @@ $else:
 </body>
 <script type="text/javascript" src="/static/jquery/2.1.1/jquery.min.js?2"></script>
 <script>
-function report(data)
+function report(status)
 {
+  set=$$('#set');
+  data={'id':set.data('id'),'status':status,'token':set.data('token'),'status':status};
   $$.post('/record/report',data,function(result)
   {
     if(result.status)
     {
-      displayMsg(result.message+"[3s后跳转]")
-      window.setTimeout(function(){location.href='/record/'},3000);
+      displayMsg(result.message)
+      $$('#set').remove();
+      // window.setTimeout(function(){location.href='/record/'},3000);
     }else{
       displayMsg(result.message)
     }
@@ -62,15 +70,17 @@ function report(data)
 }
 function displayMsg(msg){$$('#err').html(msg).show();window.setTimeout(function(){$$('#err').html(msg).hide(500)},1500);}
 $$('#report').click(function(argument) {
-  if(confirm("举报后,对方将被列入恶意使用者名单，永久关闭其招领功能。举报恶意骚扰？"))
+  if(confirm("举报后,对方将被列入恶意使用者名单，永久关闭其招领功能。这是恶意骚扰行为？"))
   {
-     data={'id':$$(this).data('id'),status:-1}
-     report(data);
+     report(-1);
   }
 })
 $$('#thank').click(function(){
-   data={'id':$$(this).data('id'),status:1}
-  report(data);
+  if(confirm("确认校园卡被TA捡到？一旦确认信息不可修改"))
+  {
+    report(1);
+  }
+
 })
 </script>
 </html>

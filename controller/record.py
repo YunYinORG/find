@@ -62,22 +62,27 @@ class report:
 
     def POST(self):
         """举报,参数ID"""
-        uid = getUserId()
-        data = web.input(id=None, status=0)
-        if not data.id or not data.status:
+      
+        data = web.input(id=None,status=0,token=None)
+        if not data.status or not data.id:
             return json(0, '信息不完整')
+        elif data.token:
+            record= recordModel.find(data.id,'find_id,status', token=data.token)
+        else:
+            uid = getUserId()
+            record = recordModel.find(data.id,'find_id,status', lost_id=uid)
 
-        record = recordModel.find(data.id,'find_id,status', lost_id=uid)
+
         if not record:
             return json(0, '记录已不存在')
         elif record.status != 0:
             return json(0, '记录已经修改，如需要再次修改,请联系feedback@yunyin.org')
-        elif data.status==1:
+        elif int(data.status)==1:
             #感谢
             #发送感谢短信
             recordModel.save(data.id, status=1)
             return json(1,'已发送感谢')
-        elif data.status==-1:
+        elif int(data.status)==-1:
             #举报
             userModel.save(record.find_id,status=-1)
             recordModel.save(data.id, status=-1)
@@ -96,15 +101,15 @@ class view:
         if not token:
             return "无限查看"
 
-        record = recordModel.find('id,lost_id,find_id,time,way', token=token)
+        record = recordModel.find('id,lost_id,find_id,time,way,token,status', token=token)
         if not record:
             return "此临时页面已关闭"
         else:
             finder = userModel.find(record.find_id, 'id,name,phone')
             lost = userModel.find(record.lost_id, 'id,name,number,school')
             lost.school = config.SCHOOL[lost.school or 0]
-            html = web.template.frender('templates/record/view.html')
-            return html(record, finder, lost)
+            html = web.template.frender('templates/record/detail.html')
+            return html(record, finder, lost,token)
 
 class detail:
     def GET(self):
