@@ -10,11 +10,17 @@ $def with (content)
   	#verify{
   		width: 85%;
   		margin:20px auto 30px auto;
-  		    border: 4px dashed #eee;
-  		    padding: 10px;
+  		border: 4px dashed #eee;
+  		padding: 10px;
+  	} 
+  	@media (max-width:500px) {
+  		#verify{font-size: 80%;}
+  	}
+  	 @media (max-width:375px) {
+  		#verify{font-size: 70%;margin-bottom: 50px;}
   	}
   	#err{width: 100%;}
-  	a{text-decoration: underline;cursor: po}
+  	a{text-decoration: underline;cursor: pointer;}
   	</style>
 </head>
 <body>
