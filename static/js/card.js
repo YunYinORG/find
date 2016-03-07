@@ -30,23 +30,7 @@ function displayErr(msg){$('#err').html(msg);}
 function ModalErr(msg){ if (msg){$('#err-modal').html(msg).show(200);}else{$('#err-modal').html('').hide();}}
 function closeModal(){$('.modal').hide();$("#main").show();$('#err-modal').hide();};
 function showModal(name){$('#main').hide();$('.modal').hide();$('#'+name+'-modal').show()};
-$('#card').blur(function(){if($(this).val()&&getcard())displayErr('');});
-$('#name').blur(function(){if($(this).val()&&getName())displayErr('');});
-$('.close').click(function(){closeModal()});
-$('#err-modal').click(function(){$(this).hide(200)});
-$('.login').click(function(){showModal('login');});
-//临时注册
-$('#opne_phone_login').click(function(){
-	$('#sms-code').hide();
-	showModal('phone');
-	$('#phone-msg').html('非学生可使用手机号作为临时账号(<a href="http://api.yunyin.org" target="_blank">该校学生请使用云印校园账号登录</a>)，为了防止滥用和骚扰，只允许发送一次信息(直到确认找回)');
-	$('#user').show();
-});
-//验证通知
-$('#submit').click(function(){
-	var number,name;
-	if((number=getcard(true))&&(name=getName(true)))
-	{
+function notify(number,name){
 		displayErr('');
 		$(this).text('正在通知...').attr('disabled','disabled');
 		var data={number:number,name:name};
@@ -80,6 +64,7 @@ $('#submit').click(function(){
 						$('#school-select').hide();
 					}
 					showModal('msg');
+					$('#submit').text('通知失主').removeAttr('disabled');
 					break;
 				default:
 					if (result['message'])
@@ -89,7 +74,27 @@ $('#submit').click(function(){
 					$('#submit').text('通知失主').removeAttr('disabled');
 					break;
 			}
-		})
+		});
+}
+
+$('#card').blur(function(){if($(this).val()&&getcard())displayErr('');});
+$('#name').blur(function(){if($(this).val()&&getName())displayErr('');});
+$('.close').click(function(){closeModal()});
+$('#err-modal').click(function(){$(this).hide(200)});
+$('.login').click(function(){showModal('login');});
+//临时注册
+$('#opne_phone_login').click(function(){
+	$('#sms-code').hide();
+	showModal('phone');
+	$('#phone-msg').html('非学生可使用手机号作为临时账号(<a href="http://api.yunyin.org" target="_blank">该校学生请使用云印校园账号登录</a>)，为了防止滥用和骚扰，只允许发送一次信息(直到确认找回)');
+	$('#user').show();
+});
+//验证通知
+$('#submit').click(function(){
+	var number,name;
+	if((number=getcard(true))&&(name=getName(true)))
+	{
+		notify(number, name);
 	}
 });
 
@@ -147,6 +152,7 @@ $('#submit-code').click(function(){
 		if(result.status==1)
 		{
 			$('.close').click();
+			$('#phone-number').html($('#phone').val());
 			$('.first').html('<h3>已登录</h3><p>'+result.message+'</p>');
 		}else{
 			ModalErr(result.message);

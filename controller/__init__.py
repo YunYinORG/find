@@ -5,7 +5,7 @@ from notify import notify, broadcast
 from phone import phone, code
 from record import record, report, detail, view
 from found import found
-
+from school import *
 # url路由
 urls = (
     '/', 'index',  # 首页
@@ -18,6 +18,7 @@ urls = (
     '/record/detail', 'detail',  # 感谢
     '/found/','found',    #丢失信息 
     '/record/v/', 'view',  # 免登录查看
+    '/school/nku', 'nku',  # 学校
     '/weibo', 'weibo',  # 绑定weibo账号
     '/test', 'test',  # 可用性测试
 )

@@ -11,7 +11,7 @@ label{width:8%;color:#eee;font-size:1.1em;line-height:1.8em}
 .input::-webkit-input-placeholder{color:#eee}
 .input:-ms-input-placeholder{color:#eee}
 .input[disabled],.input[disabled]:hover, button[disabled], button[disabled]:hover{color: #eee;cursor: not-allowed;border-color: #bbb;background: #bbb;}
-.btn:active,.btn:hover,.input:focus{border:5px double #fff;background:#fefefe;color:#57c3ea;font-weight:bolder}
+.btn:active,.btn:hover,.input:focus{background:rgba(100,120,100,0.7);color:#57c3ea;font-weight:bolder}
 .input:active,.input:hover{border-bottom:5px dotted;font-weight:bolder}
 .btn{padding:2px;width:80%;border:5px double #fff;color:#fff;cursor:pointer}
 .info{display:flex;margin:auto;text-align:center;-webkit-flex-flow:row wrap}

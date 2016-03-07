@@ -5,15 +5,15 @@ import yunyin as yy
 from model.user import merge, userModel
 
 
-def _checkPhone(uid, phone):
+def _checkPhone(user, phone):
     """检查手机号是否重复"""
     phone_user = userModel.find('id,yyid', phone=phone)
     if not phone_user:  # 手机号未登录过
-        return userModel.save(uid, phone=phone)
-    elif phone_user.id == uid:  # 同一个账号
+        return userModel.save(user['id'], phone=phone)
+    elif phone_user.id == user['id']:  # 同一个账号
         return True
     elif not phone_user.yyid:  # 临时登录过
-        return merge(phone_user.id, uid)
+        return merge(phone_user.id, user['id'])
     elif phone_user.yyid != user['yyid']:  # 异常情况,此手机已经绑定了其他账号
         return False
 
@@ -75,7 +75,7 @@ def getPhone():
         return user['call']
     else:  # 本地无手机号，尝试远端获取
         phone = user['yyid'] and yy.getPhone(user['yyid'])
-        _checkPhone(user['id'], phone)
+        _checkPhone(user, phone)
         return phone
 
         # 逻辑太复杂---删
@@ -121,5 +121,5 @@ def savePhone(phone):
         return False
     else:
         user['call'] = phone
-        _checkPhone(user['id'], phone)
+        _checkPhone(user, phone)
         return cookie.set('u', user)

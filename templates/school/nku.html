@@ -1,0 +1,89 @@
+$def with (user)
+<div id="main">
+	<h2>
+		<small>$user['name']</small>
+		($:{user['call'] or '<a onclick="showModal(\'phone\');">绑定手机</a>'})
+		<a href="/record/">记录</a>
+	</h2>
+	<div id="err" class="err"></div>
+	<div id="verify">
+		<h3>捡到一卡通？立即通知！</h3>
+		<div class="card">
+			<label>卡号</label>
+			<input type="text" id="card" class="input" placeholder="失主学号" autocomplete="off"/>
+		</div>
+		<div class="name">
+			<label>姓名</label>
+			<input type="text" id="name" class="input" placeholder="失主姓名" autocomplete="off"/>
+		</div>
+		<button id="submit" type="submit" class="btn">通知失主</button>
+	</div>
+</div>
+
+<div id="phone-modal" class="modal" style="display:none">
+	<div class="content">
+		<div class="close">×</div>
+		<h2>验证您的手机号</h2>
+		<p id="phone-msg">当您的校园卡遗失后，系统会发送拾卡人联系至此手机上(为了保护您的隐私，手机号不会公开，拾卡者也不能查看)！</p>
+		<p>当您捡到别人卡时，失主可以通过此手机号联系您！</p>
+		<div>
+			<input type="text" class="input" id="phone" name="phone" placeholder="您的手机"/>
+			<input style="display: none" type="text" class="input" id="user" name="name" placeholder="您的姓名">
+			<button class="auto" id="submit-phone">发送验证码</button>
+		</div>
+		<div id="sms-code" style="display:none">
+			<input type="text" class="input code" id="code" name="code" placeholder="验证码" autocomplete="off">
+			<button class="auto" id="submit-code">验证</button>
+		</div>
+	</div>
+</div>
+
+<div id="msg-modal" class="modal" style="display:none" >
+	<div class="content">
+		<div class="close">×</div>
+		<h2>失主没有绑定手机</h2>
+		<p>
+			虽然我们不能直接给TA发送短信，但是我们可以通过 <strong>BBS私信</strong>
+			(暂支持南开BBS私信)通知他， <strong>微博</strong>和<strong>校内论坛广播</strong>
+			等方式传播消息。TA一样可以在这儿联系您。
+		</p>
+		<div class="msg-box">
+			<div id="school-select">
+				<lable>失主所在学校</lable>
+				<select id="sch" class="input auto">
+					<option value="">失主学校</option>
+					<option value="1">南开大学</option>
+					<option value="2">天津大学</option>
+					<option value="4">河北工业</option>
+				</select>
+			</div>
+			<p>附加必要信息(限16字符以内)</p>
+			<textarea id="msg" rows="2" class="input" maxlength="16" placeholder="如:“卡在二食堂一楼”,“联系保卫处23503580”"></textarea>
+			<p>
+				请不要将此功能用于表白哦！一旦有骚扰举报终身小黑屋(●ˇ∀ˇ●)
+				<br/>
+				请放心，我们不会公开您的手机号和姓名等信息！
+			</p>
+			<button class="auto" id="submit-msg">发送通知</button>
+		</div>
+	</div>
+</div>
+<div id='err-modal'>错误提示</div>
+<script src="/static/jquery/2.1.1/jquery.min.js"></script>
+<script src="/static/js/card.js"></script>
+<script type="text/javascript">
+function showModal(name){
+	$$('#main').hide();
+	$$('.modal').hide();
+	$$('#'+name+'-modal').show();
+	$$('footer').hide();
+	$$('h1').hide();
+};
+function closeModal(){
+	$$('.modal').hide();
+	$$("#main").show();
+	$$('#err-modal').hide();
+	$$('footer').show();
+	$$('h1').show();
+};	
+</script>
