@@ -68,14 +68,14 @@ class notify:
             return json(LIMITED, '失主未确认记录过多，或者设置了防骚扰，禁止发送通知')
 
         # 发送短信
-        finder_school_info=userModel.find(finder['id'],'school')
-        if finder_school_info and finder_school_info.school :
-            finder_name=config.SCHOOL[finder_school_info.school]+'的'+finder['name']
+        finder_school_info = userModel.find(finder['id'], 'school')
+        if finder_school_info and finder_school_info.school:
+            finder_name = config.SCHOOL[finder_school_info.school] + '的' + finder['name']
         else:
-            finder_name=finder['name']
+            finder_name = finder['name']
 
         token, long_url = url.create(finder['id'], lost_id)
-        if sms.sendNotify(lost['phone'],finder_name, phone, url.short(long_url)):  # 短信发送通知
+        if sms.sendNotify(lost['phone'], finder_name, phone, url.short(long_url)):  # 短信发送通知
             recordModel.add(lost_id=lost_id, find_id=finder['id'], way=config.NOTIFY_SMS, token=token)
             return json(SUCCESSS, "通知成功")
         else:  # 发送失败,转到下一步
@@ -86,6 +86,10 @@ class notify:
 
     def next(self, info, school, lost_id=0):
         """无手机号转入下一步"""
+        if lost_id == 0:
+            lost_user = userModel.find(_field="id", number=info['number'], school=school)
+            if lost_user:
+                lost_id = lost_user.id
         data = {'name': info['name'], 'card': info['number'], 'sch': school, 'id': lost_id}
         cookie.set('b', data)
         return json(NO_USER, lost_id and school)
@@ -100,7 +104,7 @@ class notify:
             return False
         # 检查未找回记录
         times = recordModel.count(find_id=uid, status=0)
-        if userType>0:
+        if userType > 0:
             return times < 3
         else:
             return times < 1
@@ -185,7 +189,7 @@ class broadcast:
         elif not (inputData['sch'] and int(inputData['sch']) == school):
             return json(RETRY, '学校不匹配!')
         else:  # 创建失主临时账号
-            uid = userModel.add(name=userInfo['name'], number=userInfo['card'],school=school, type=-1)
+            uid = userModel.add(name=userInfo['name'], number=userInfo['card'], school=school, type=-1)
 
         # 输入过滤
         msg = inputData['msg'] and re.sub(r'</?\w+[^>]*>', '', inputData['msg'])
@@ -194,12 +198,14 @@ class broadcast:
         token, viewurl = url.create(find_id, uid)
         # 判断学校
         if school == 1:  # 南开
-            # nkbbs
-            pass
+            from lib.bbs_nku import post as nkubbs_broadcast
+            if nkubbs_broadcast(userInfo['card'], userInfo['name'], finder['name'], finder['call'], msg):
+                way = way | config.NOTIFY_BBS
         elif school == 2:  # 天大
             # tjubbs
             from lib.bbs_tju import broadcast as tjubbs_broadcast
-            if tjubbs_broadcast(userInfo['card'], userInfo['name'], viewurl, msg):
+            site_url = "http://find.yunyin.org"
+            if tjubbs_broadcast(userInfo['card'], userInfo['name'], site_url, msg):
                 way = way | config.NOTIFY_BBS
         elif school == 4:  # 河北工业大学
             return json(LIMITED, "正在接入中")
@@ -213,9 +219,9 @@ class broadcast:
         if weibo.post(weibo_msg):
             way = way | config.NOTIFY_WEIBO
 
-        if way:
-            # 更新数据库
-            recordModel.add(lost_id=uid, find_id=find_id, way=way, token=token)
+        if way != 0x0:
+            # 更新数l据库
+            recordModel.add(lost_id=uid, find_id=find_id, way=way, token=token[:8])
             cookie.delete('b')
             return json(SUCCESSS, way)
         else:
