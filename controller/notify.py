@@ -221,7 +221,7 @@ class broadcast:
 
         if way != 0x0:
             # 更新数l据库
-            recordModel.add(lost_id=uid, find_id=find_id, way=way, token=token[:8])
+            recordModel.add(lost_id=uid, find_id=find_id, way=way, token=token[:16])
             cookie.delete('b')
             return json(SUCCESSS, way)
         else:
