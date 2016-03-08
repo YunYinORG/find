@@ -38,9 +38,12 @@ $if recordInfo.status==0:
 $if recordInfo.status > 0:已经感谢
 $elif recordInfo.status < 0:已经举报
 $else:等待确认
-</span>
+</span> 
 </div>
-  </div>
+</div>
+<div class="lostinfo">
+<div><span class="item">通知方式</span><span class="detail">$recordInfo.ways</span></div>
+</div>
 <div class="tips">
 	<p>如果招领信息属实，请尽快联系“雷锋同志”认领，并确认感谢(以免影响“雷锋”继续行善)</p>
 <p>如果此内容为虚假的骚扰内容，您可立即用此学号登录举报，系统将会封禁“假雷锋”</p>

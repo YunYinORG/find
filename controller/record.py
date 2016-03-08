@@ -25,7 +25,7 @@ def parseWay(way):
         m+=' 微博广播 '
     if way&config.NOTIFY_BBS:
         m+=' 校内BBS '
-    return m
+    return m.strip()
 
 class record:
 
@@ -102,9 +102,11 @@ class view:
             return "无限查看"
 
         record = recordModel.find('id,lost_id,find_id,time,way,token,status', token=token)
+       
         if not record:
             return "此临时页面已关闭"
         else:
+            record.ways=parseWay(record.way)
             finder = userModel.find(record.find_id, 'id,name,phone')
             lost = userModel.find(record.lost_id, 'id,name,number,school')
             lost.school = config.SCHOOL[lost.school or 0]
@@ -120,6 +122,7 @@ class detail:
         if not record:
             raise web.seeother("/")
         
+        record.ways=parseWay(record.way)
         finder = userModel.find(record.find_id, 'id,name,phone')
         lost = userModel.find(record.lost_id, 'id,name,number,school')
         lost.school = config.SCHOOL[lost.school or 0]
