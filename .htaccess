@@ -2,10 +2,6 @@
     SetHandler wsgi-script
     Options ExecCGI FollowSymLinks
 </Files>
-<Files code.py>
-    SetHandler wsgi-script
-    Options ExecCGI FollowSymLinks
-</Files>
 <IfModule mod_rewrite.c>      
   RewriteEngine on
   RewriteBase /
