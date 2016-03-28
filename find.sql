@@ -30,7 +30,7 @@ create table user
 (
    id                bigint not null auto_increment,
    yyid              bigint,
-   number            char(10),
+   number            char(12),
    school            tinyint,
    name              varchar(10) not null,
    phone             char(16),
