@@ -35,25 +35,52 @@ def getUser():
         if not yyuser:
             return None
         else:
-            yyid = yyuser['id']
-            user = userModel.find(_field='id,phone,yyid,type', number=yyuser['number'], school=yyuser['sch_id'])
-            if not user:  # 本地数据库未同步该用户
-                phone = yy.getPhone(yyid)
-                phone_user = phone and userModel.find('id,yyid', phone=phone)  # 云印账号带有手机
-                if phone_user:  # 检查手机是否使用过
-                    if not phone_user.yyid:  # 临时账号
-                        uid = phone_user.id  # 更新临时账号
-                        userModel.save(uid, yyid=yyuser['id'], name=yyuser['name'], number=yyuser['number'], school=yyuser['sch_id'], type=1)
-                    else:  # 绑定过其他账号，账号不一致...
-                        # 异常情况
-                        return False
-                else:
-                    uid = userModel.add(yyid=yyuser['id'], name=yyuser['name'], phone=phone, number=yyuser['number'], school=yyuser['sch_id'], type=1)
-            elif user.type != 1:  # 曾作为被找回临时账号,此处升级为正式账号
-                uid, phone = user.id, yy.getPhone(yyid)
-                userModel.save(uid, yyid=yyid, phone=phone, name=yyuser['name'], type=1)
+            # 检查账号同步情况
+            yyid = int(yyuser['id'])
+            sync_user = userModel.find(_field='id,phone', yyid=yyid)
+            if sync_user:
+                # yyid已经同步
+                if sync_user.phone:  # 已经同步了手机
+                    phone = sync_user.phone
+                else:  # 未同步的手机
+                    phone = yy.getPhone(yyid)
+                    if phone:
+                        # 手机号未同步
+                        phone_user = userModel.find('id', phone=phone)  # 云印账号带有手机
+                        if not phone_user:
+                            # 此手机号未曾使用直接使用
+                            userModel.save(uid, phone=phone)
+                        else:
+                            # 使用过，合并账号
+                            uid = merge(phone_user.id, sync_user.id)
+                return saveUser(sync_user.id, yyuser['name'], phone, yyid)
+
+            # 未同步账户
+            # 查询该学号的用户
+            user = userModel.find(_field='id,phone,yyid,type',number=yyuser['number'], school=int(yyuser['sch_id']))
+            # 查询绑定该手机的用户
+            phone = yy.getPhone(yyid)
+            phone_user = phone and userModel.find('id,yyid', phone=phone)  # 云印账号带有手机
+
+            if not (user or phone_user):
+                # 手机和学号都不存在
+                # 直接写入数据库
+                uid = userModel.add(yyid=yyid, name=yyuser['name'], phone=phone, number=yyuser['number'], school=yyuser['sch_id'], type=1)
+            elif user and not phone_user:
+                # 学号已存在，手机未使用过
+                # 更新用户信息
+                uid = user.id
+                userModel.save(uid, yyid=yyid, name=yyuser['name'], phone=phone, type=1)
+            elif not user and phone_user:
+                # 学号不存在，手机使用过【临时登录】
+                # 更新临时账号
+                uid = phone_user.id
+                userModel.save(uid, yyid=yyid, name=yyuser['name'], number=yyuser['number'], school=yyuser['sch_id'], type=1)
             else:
-                uid, phone = user.id, user.phone
+                # 两个都存在
+                # 合并账号
+                uid = merge(phone_user.id, user.id)
+                userModel.save(uid,yyid=yyid,type=1)
             return saveUser(uid, yyuser['name'], phone, yyid)
 
 
